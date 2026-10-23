@@ -22,6 +22,7 @@ The agent workflow runs in the devcontainer in `.devcontainer/`: Node 22, pnpm 1
 - `post-create.sh` installs pnpm, runs `pnpm install --frozen-lockfile`, sets the hooks path and makes the hooks executable.
 - The hooks path is `core.hooksPath=.githooks` in the container's system git config (`/etc/gitconfig`), not in `.git/config`. The macOS host shares `.git/config`, has bash 3.2 and its own `node_modules`, so on the Mac commits run no hooks.
 - The Claude login and `node_modules` live in named volumes, so they survive a rebuild.
+- Worktrees under `.claude/worktrees/` sit on the bind mount, so pnpm keeps their store at the repo root, in `.pnpm-store/` (ignored by git and vsce). It is pnpm's default location, shared by all worktrees, and their `node_modules` hardlink into it.
 
 ## Checks
 

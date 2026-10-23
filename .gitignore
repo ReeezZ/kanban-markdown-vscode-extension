@@ -12,6 +12,7 @@ releases/
 .claude/settings.local.json
 .claude/.cc-writes
 __pycache__/
+/.pnpm-store/
 .devtool/
 coverage/
 .gitconfig-personal

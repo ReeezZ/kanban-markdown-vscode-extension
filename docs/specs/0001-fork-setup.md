@@ -59,7 +59,7 @@ In the container:
    - Commit 5 runs every area's checks.
    - A staged lint error is rejected (undo it with `git restore`).
    - `.githooks/pre-commit main` also builds.
-8. **Package contents:** `pnpm exec vsce ls --no-dependencies | grep -E '^(\.claude|\.devcontainer|\.githooks|backlog|docs/specs)/|CLAUDE\.md'` prints nothing.
+8. **Package contents:** `pnpm exec vsce ls --no-dependencies | grep -E '^(\.claude|\.devcontainer|\.githooks|backlog|docs/specs|\.pnpm-store)/|CLAUDE\.md'` prints nothing.
 9. **F5:** Running Extensions shows the dev build, and the board opens.
 10. **Board:** the main window shows the 16 cards in Backlog, in a0…aF order, with the phase epics.
 11. **Rebuild:** after a container rebuild, the Claude login persists and `node_modules` reinstalls.
@@ -92,6 +92,7 @@ In the container:
   - Upstream's commit style already uses the `ci:` type, so the commit-msg hook accepts it.
 - **Card status changes get their own commits** (`docs(backlog): start <id>` and `docs(backlog): finish <id>`), so code commits cherry-pick onto `upstream/main` without touching `backlog/`.
 - **`order` keys unique across the whole board.** The installed 1.14.1 throws when two neighbouring cards share a key (bug 2), so `/park` takes the highest key on the board until that fix ships.
+- **The worktrees' pnpm store stays at the repo root, ignored** (found in step 6). Worktrees sit on the bind mount, a different filesystem from the `node_modules` volume, so pnpm puts their store at the mount root, `.pnpm-store/` (about 360 MB). It's ignored in `.gitignore` and `.vscodeignore` (vsce would ship it otherwise). Keeping pnpm's default means no `--store-dir` flag that a manual install could miss, and worktrees hardlink into one shared store. Pointing worktrees at the volume store was rejected: across devices pnpm copies a full install per worktree.
 - **Explore findings for the cards.**
   - **Bug 1 is confirmed.** `KanbanPanel._moveFeature` filters the target column without the epic lane (`src/extension/KanbanPanel.ts:618-620`; the key is generated at L626). The `moveFeature` message has no lane field (`src/shared/types.ts:127`), while `moveAllCards` (L138) has one. The webview computes the index per lane (`KanbanBoard.tsx:89`, `:109`; `App.tsx:339-344`).
   - **Bug 2 is confirmed.** `case 'moveFeature'` (`KanbanPanel.ts:121-123`) has no try/catch. Status and `modified` are changed in memory before `generateKeyBetween` can throw (L611-615).
@@ -253,7 +254,8 @@ Copy from `/workspaces/agentic_template`, keeping all of it: specs, area docs, b
   - `.claude/settings.local.json`
   - `.claude/.cc-writes`
   - `__pycache__/`
-- `.vscodeignore`: add `.claude/** .devcontainer/** .githooks/** backlog/** **/CLAUDE.md docs/*.md docs/specs/** docs/areas/** scripts/*.py scripts/README.md **/__pycache__/** pnpm-workspace.yaml`.
+  - `/.pnpm-store/`
+- `.vscodeignore`: add `.claude/** .devcontainer/** .githooks/** backlog/** **/CLAUDE.md docs/*.md docs/specs/** docs/areas/** scripts/*.py scripts/README.md **/__pycache__/** .pnpm-store/** pnpm-workspace.yaml`.
 - `.vscode/settings.json`: add the four `kanban-markdown.*` keys.
 - `.vscode/extensions.json`: add `LachyFS.kanban-markdown`.
 - vitest, tsconfig and eslint stay unchanged: their globs are root-relative and don't reach `.claude/worktrees/`.

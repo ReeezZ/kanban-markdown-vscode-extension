@@ -20,4 +20,5 @@ docs/areas/**
 scripts/*.py
 scripts/README.md
 **/__pycache__/**
+.pnpm-store/**
 pnpm-workspace.yaml
