@@ -64,4 +64,4 @@ One pass per area, after the area docs and the baseline tests exist. A finding i
 - Duplication: `Dropdown`, `PropertyRow` and the label input are copied between `FeatureEditor` and `CreateFeatureDialog`; the editor uses a native date input, the dialog `DatePicker`; the order comparator is in the store twice and in `App.tsx`; `KanbanEpicBoard` repeats `featureMatchesEpicLane` inline.
 - Strings: the `Esc`, `⌘S`, `⌘ Enter` and `⌘B` hints are hard-coded and show `⌘` on every platform. Ctrl/Cmd+B always starts Claude, not the agent picked in the dropdown.
 
-**Needs:** [`baseline-tests`](baseline-tests.md), [`area-docs-baseline`](area-docs-baseline.md)
+**Needs:** [`baseline-tests`](baseline-tests.md), [`area-docs-baseline`](done/area-docs-baseline.md)
