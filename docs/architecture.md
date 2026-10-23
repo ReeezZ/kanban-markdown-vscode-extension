@@ -18,7 +18,32 @@ What goes here, and what goes in an area doc instead, is under [Architecture doc
 - **Webview** (`src/webview/`): React 18, Zustand and Tailwind, built with Vite. It renders the board, handles drag and drop, and hosts the card editor.
 - **Shared** (`src/shared/`): the types and small utilities both sides use, including the message types (`types.ts`) and the card file parser and serializer (`featureFrontmatter.ts`). Imports are relative and it has no DOM, since the integration tests compile it without the `@/` alias.
 
-The host and the webview talk through `postMessage`; `src/shared/types.ts` is the contract. The area docs will be linked here (see the card `area-docs-baseline` in [backlog](../backlog/)).
+```mermaid
+flowchart LR
+  subgraph vscode["VS Code"]
+    host["Extension host<br/>src/extension"]
+    board["Board webview<br/>src/webview"]
+    sidebar["Sidebar view"]
+    state[("workspaceState<br/>UI state")]
+    settings[("Settings<br/>kanban-markdown.*")]
+  end
+  files[("Card files<br/>Markdown in the features directory")]
+  shared["src/shared<br/>types, card file format"]
+
+  board <-->|"postMessage"| host
+  sidebar <-->|"postMessage"| host
+  host -->|"read, write"| files
+  files -.->|"file watcher"| host
+  host -->|"read, write"| state
+  settings -->|"read"| host
+  shared -.-|"imported by"| host
+  shared -.-|"imported by"| board
+```
+
+The host and the webview talk through `postMessage`; `src/shared/types.ts` is the contract.
+
+- [Extension](areas/extension.md): loading, moving and writing cards, the messages, file watching.
+- The webview's area doc is still to come (see the card `area-docs-baseline` in [backlog](../backlog/)).
 
 ## Decisions
 
