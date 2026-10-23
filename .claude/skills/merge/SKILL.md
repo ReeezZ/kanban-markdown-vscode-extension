@@ -11,6 +11,7 @@ Merge the branch `$ARGUMENTS` (default: the current branch) into `main`. The rea
 - If the session is inside a worktree, leave it first (ExitWorktree with `keep`) before the first git command: a worktree session refuses git commands aimed outside it, `git -C <path>` included. Afterwards reach the branch's checkout with `git -C <path>`.
 - `git worktree list` shows where `main` and the branch are checked out; the main checkout is the first entry. `git status --short` must be clean in the branch's checkout, or stop and say what's uncommitted. Untracked character devices don't count (`[ -c <path> ]`): they're the sandbox's placeholders for blocked paths, see [Devcontainer](../../../docs/development.md#devcontainer).
 - `git log --oneline main..<branch>` gives the commits: one commit means fast-forward, several mean a merge commit.
+- If the branch or `main` since the merge base changed `.claude/settings.json`, `.claude/skills/` or `.claude/hooks/` (`git diff --name-only <merge-base> main <branch> -- .claude/settings.json .claude/skills .claude/hooks`, run once per side), the rebase, the `git switch main` and the merge rewrite files the sandbox can't write: run those three unsandboxed, with the merge message in the scratchpad, not `$TMPDIR`. See [Claude Code's Bash sandbox](../../../docs/development.md#claude-codes-bash-sandbox).
 
 ## 2. Rebase and checks
 
