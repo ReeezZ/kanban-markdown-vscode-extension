@@ -46,7 +46,7 @@ Then clean up, each as a separate command. `git branch -d <branch>` is allowed w
 
 In the container, `git branch -d` exits 1 with `could not lock config file .git/config`: the branch is deleted, but its config section stays, since `.git/config` is mounted read-only. Judge it by `git branch --list <branch>` being empty, not by the exit code.
 
-If `git worktree remove` fails with "Directory not empty", ask the user to close that worktree's editor tabs, then retry. If it fails with `Device or resource busy`, say that it's the sandbox and retry it unsandboxed.
+If `git worktree remove` fails with "Directory not empty", ask the user to close that worktree's editor tabs, then retry. If it fails with `Device or resource busy`, or with "contains modified or untracked files" where every untracked path is a character device (the sandbox's placeholders, `[ -c <path> ]`), say that it's the sandbox and retry it unsandboxed.
 
 ## 5. Retro and wrap-up
 
