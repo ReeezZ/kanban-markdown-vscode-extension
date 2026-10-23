@@ -6,7 +6,7 @@ assignee: null
 epic: "01 Foundation"
 dueDate: null
 created: "2026-10-23T16:30:00.000Z"
-modified: "2026-10-23T23:30:00.000Z"
+modified: "2026-10-23T23:45:00.000Z"
 completedAt: null
 labels: ["chore", "extension"]
 order: "a0l"
@@ -14,6 +14,8 @@ order: "a0l"
 # Baseline tests
 
 **Goal:** a refactor that changes where a moved card lands fails a test, so the review's refactors and the Phase 2 fixes start from pinned behaviour instead of guesses.
+
+This is preparation, not a feature: nothing changes for the person using the board. The tests are a safety net so the code can be changed afterwards without silently breaking moves.
 
 Today `_moveFeature`, the `moveFeature` message and the webview's drop-index mapping have no tests (see Risks in the [architecture doc](../docs/architecture.md#risks)). This card pins the move path where it works correctly today: the standard view, with distinct keys.
 
