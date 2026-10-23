@@ -20,7 +20,7 @@ Write two area docs and link them from [Building blocks](../docs/architecture.md
 - `docs/areas/extension.md`: the host: the message switch, move and order, file watching (including how it tells its own writes from external ones), the sidebar view and the header provider.
 - `docs/areas/webview.md`: the store, drag and drop, the editor.
 
-The docs explain what the code can't say on its own: how the parts fit together, why, and the edge rules. Diagrams where they replace text (for example the drag, write, watch and refresh loop, and the host and webview messages). No code listings. The card format stays in the architecture Decisions, which the extension doc links to.
+The docs explain what the code can't say on its own: how the parts fit together, why, and the edge rules. Diagrams where they make the code easier to understand or give an overview (for example the drag, write, watch and refresh loop, and the host and webview messages). No code listings. The card format stays in the architecture Decisions, which the extension doc links to.
 
 **Done when**
 
