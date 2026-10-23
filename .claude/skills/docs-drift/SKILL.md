@@ -8,7 +8,7 @@ argument-hint: "[area name | development | README]  (default: all)"
 
 Check whether the docs still match the code, and whether they should describe it at all. Don't edit any file: report findings and proposed changes, the user picks which to apply.
 
-Scope: `$ARGUMENTS`. If empty, cover every area doc in `docs/areas/`, `docs/development.md` and the folder READMEs (`git ls-files '*/README.md'`, the root `README.md` apart: it is upstream's, so it's left out unless named). Otherwise only the named area doc (e.g. `webview` → `docs/areas/webview.md`), `development` (`docs/development.md`), or `README` (the folder READMEs and the root `README.md`; findings on the root one are reported, not applied, since it's upstream's).
+Scope: `$ARGUMENTS`. If empty, cover every area doc in `docs/areas/`, `docs/development.md` and the folder READMEs (`git ls-files '*/README.md'`, and the root `README.md`, checked for features it describes that the code doesn't have, or no longer has). Otherwise only the named area doc (e.g. `webview` → `docs/areas/webview.md`), `development` (`docs/development.md`), or `README` (the folder READMEs and the root `README.md`).
 
 With more than one item in scope, start one subagent per item, in parallel, each given this file's instructions and its one item. Then merge their reports into one, in the format under [Report](#report). With one item, do it yourself.
 

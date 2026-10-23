@@ -17,7 +17,7 @@ order: "a4"
 
 **Cause:** `FeatureEditor.tsx` hardcodes `statuses` (L74), `statusDots` (L83) and the labels (`getStatusLabels()`, L541), and `FeatureStatus` in `src/shared/types.ts:4` is the fixed union `'backlog' | 'todo' | 'in-progress' | 'review' | 'done'`. A card with a status that is no configured column doesn't show on the board.
 
-**Fix:** build the options from the configured `columns` and widen the type to `string`. Self-contained, upstream-able.
+**Fix:** build the options from the configured `columns` and widen the type to `string`. Self-contained.
 
 **Done when**
 
