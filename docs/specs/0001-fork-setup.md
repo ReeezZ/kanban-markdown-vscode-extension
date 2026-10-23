@@ -24,7 +24,7 @@ The work is split between two sessions:
 ## Done means
 
 - `packageManager` is `pnpm@12.15.0`. `pnpm-workspace.yaml` allow-lists install scripts for esbuild only and sets `minimumReleaseAge`. CI uses `pnpm/action-setup@v6` and Node 22.
-- `.devcontainer/` builds an image with Node 22, pnpm 12, bash 5, GNU coreutils, python3 ≥ 3.10, jq, xvfb and the Electron libraries, plus Claude Code. The Claude login and `node_modules` are kept in named volumes.
+- `.devcontainer/` builds an image with Node 22, pnpm 12, bash 5, GNU coreutils, python3 ≥ 3.10, jq, xvfb and the Electron libraries, plus Claude Code. The Claude login and `node_modules` are kept in named volumes. The temporary template mount is gone again, so the container starts on any machine.
 - The template's files are in place and adapted (step 5–6):
   - `CLAUDE.md`, `docs/CLAUDE.md`, `docs/git-workflow.md`, `docs/development.md`, `docs/roadmap.md`, `docs/architecture.md`;
   - `docs/specs/`, `docs/areas/`, `.githooks/`, `scripts/docs_check.py` (+ tests);
@@ -136,7 +136,7 @@ Commit: `build: move to pnpm 12 and allow install scripts only for esbuild`.
 - Named volumes:
   - `/home/node/.claude`, so the Claude login survives a rebuild;
   - `node_modules`, because the host's `node_modules` holds darwin binaries.
-- A read-only bind of `${localEnv:HOME}/git/agentic_template` to `/workspaces/agentic_template`, as the copy source for steps 5–6.
+- A read-only bind of `${localEnv:HOME}/git/agentic_template` to `/workspaces/agentic_template`, as the copy source for steps 5–6. It's temporary and is removed in step 9, because the source path exists only on this Mac and the container won't start without it.
 - `containerEnv`: `CLAUDE_CONFIG_DIR=/home/node/.claude`.
 - `remoteUser: node`. Add `runArgs: ["--shm-size=1g"]` only if Electron crashes.
 
@@ -324,6 +324,10 @@ Then delete the untracked `agent-handoff.md`.
 Run [Tests](#tests).
 
 ### 9. Close and merge (container)
+
+Remove the template mount from `.devcontainer/devcontainer.json`, then rebuild the container to check that it still starts.
+
+Commit: `build(devcontainer): drop the template mount`.
 
 Set this spec to `Done — <date>` and fold what's still current into `docs/development.md`. Then delete the spec on the same branch.
 
