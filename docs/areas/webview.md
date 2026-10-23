@@ -41,7 +41,7 @@ flowchart TD
 
 - `App.tsx` is the only place that listens to the host. It also owns what isn't in the store: the open card of the editor, the create dialog and the pending deletes.
 - The boards and the column menus post some messages themselves (collapse, move all, archive all), and so does the label manager.
-- The board components read the cards through selector functions, not by subscribing to `features`; they redraw because `App` subscribes to the whole store and redraws with every change.
+- `KanbanBoard` reads the cards through selector functions, not by subscribing to `features`; it redraws because `App` subscribes to the whole store and redraws with every change.
 - `QuickAddInput.tsx` and `PrioritySelect.tsx` aren't used anywhere.
 
 ## Optimistic updates
@@ -119,7 +119,7 @@ sequenceDiagram
 - There is no save button. A save goes 800 ms after the last change to the body or a field, or at once with Ctrl/Cmd+S or Esc (Esc also closes). The close button, "open file" and delete don't save, so changes from the last 800 ms are lost.
 - Every `featureContent` replaces the body and the fields in the editor, with no check for unsaved changes. Changes made since the last save are lost, along with the cursor and the undo history. When the host sends one is under [File watching](extension.md#file-watching). Clicking the open card again also asks for it.
 - A timer still pending when new content arrives is not cancelled. A pending field change then writes its old fields back, which can undo the status a drag just set.
-- The editor stays mounted when another card is opened, and the timer keeps the save for the card it was started on. Opening card B within 800 ms of an edit to card A loads B, then saves B's body and fields into A's file.
+- The editor stays mounted when another card is opened, and the timer keeps the save for the card it was started on. Opening card B within 800 ms of an edit to card A loads B, then saves B's body into A's file, with B's fields after a body edit or A's after a field edit.
 - A card with an empty body is not loaded: the editor keeps the previous card's text.
 - The editor isn't closed when its card leaves the board (deleted or archived elsewhere). The host ignores saves for a card it doesn't have, so edits made after that are lost without a message.
 - The status list is the five default statuses, not the `columns` setting.
