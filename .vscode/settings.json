@@ -7,5 +7,30 @@
   },
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  },
+  "kanban-markdown.featuresDirectory": "backlog",
+  "kanban-markdown.columns": [
+    {
+      "id": "backlog",
+      "name": "Backlog",
+      "color": "#6b7280"
+    },
+    {
+      "id": "ready",
+      "name": "Ready",
+      "color": "#3b82f6"
+    },
+    {
+      "id": "in-progress",
+      "name": "In Progress",
+      "color": "#f59e0b"
+    },
+    {
+      "id": "done",
+      "name": "Done",
+      "color": "#22c55e"
+    }
+  ],
+  "kanban-markdown.showBuildWithAI": false,
+  "kanban-markdown.defaultPriority": "low"
 }

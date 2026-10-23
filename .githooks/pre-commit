@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+# Every commit: scripts/docs_check.py --check (the breadcrumb on line 1 of each
+# doc, see "Breadcrumb" in docs/CLAUDE.md, that every relative link and #anchor
+# in the docs resolves, and the backlog cards). It reads the working tree and
+# never edits; run it with --fix to write the breadcrumbs and card links, then
+# stage again. Broken links are fixed by hand.
+#
+# Then each area's checks, when the commit stages a file in that area; the
+# first one that fails stops the commit. See "Checks" in docs/development.md.
+# A change to this hook runs every area, so the change gets exercised.
+# The checks read the working tree, so they see unstaged edits too; stash
+# those to check exactly what's staged.
+#
+# `.githooks/pre-commit main` picks the areas from what the current branch
+# changed since main instead of from what's staged; the merge steps in
+# "Branches and merges" in docs/git-workflow.md run it that way, and so does
+# the upstream sync (`.githooks/pre-commit ORIG_HEAD`, see "Upstream" there).
+# With a base the app check also builds.
+#
+# The container's system git config enables it with core.hooksPath=.githooks
+# (see "Devcontainer" in docs/development.md).
+set -euo pipefail
+
+cd "$(git rev-parse --show-toplevel)"
+base="${1:-}"
+
+step() { echo "pre-commit: $*" >&2; }
+fail() {
+  echo >&2
+  echo "$*" >&2
+  exit 1
+}
+
+# True when the commit stages (or, given a base, the branch changes) one of
+# the paths.
+changed() {
+  if [[ -n "$base" ]]; then
+    [[ -n "$(git diff --name-only "$base...HEAD" -- "$@" .githooks/pre-commit)" ]]
+  else
+    [[ -n "$(git diff --cached --name-only -- "$@" .githooks/pre-commit)" ]]
+  fi
+}
+
+# The app: lint, types and unit tests; the build only with a base, since a
+# merge can break it where each commit didn't. The integration tests stay out
+# (see "Checks" in docs/development.md).
+check_app() {
+  step "app: lint"
+  pnpm lint >&2 || fail "Fix the lint errors above and stage again."
+  step "app: typecheck"
+  pnpm typecheck >&2 || fail "Fix the type errors above and stage again."
+  step "app: unit tests"
+  pnpm test >&2 || fail "Fix the failing tests above and stage again."
+  if [[ -n "$base" ]]; then
+    step "app: build"
+    pnpm build >&2 || fail "Fix the build errors above."
+  fi
+}
+
+check_l10n() {
+  step "l10n: pnpm check-l10n"
+  pnpm check-l10n >&2 || fail "Fix the l10n files above and stage again."
+}
+
+scripts/docs_check.py --check
+
+if changed scripts/; then
+  step "scripts: unit tests (unittest)"
+  python3 -m unittest discover -s scripts -t . -q >&2 || fail "Fix the failing tests above and stage again."
+fi
+
+if changed src/ tests/ package.json pnpm-lock.yaml pnpm-workspace.yaml 'tsconfig*.json' \
+  vite.config.ts vitest.config.mts eslint.config.mjs tailwind.config.js postcss.config.mjs; then
+  check_app
+fi
+if changed l10n/ 'package.nls*.json'; then check_l10n; fi
