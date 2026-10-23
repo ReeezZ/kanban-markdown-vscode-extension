@@ -7,7 +7,7 @@ agent: general-purpose
 
 Check that the project docs agree with each other. Don't read application code; comparing docs to code is `/docs-drift`. Don't edit any file: report findings and proposed changes, the user picks which to apply.
 
-The rules the docs are meant to follow are in `docs/CLAUDE.md` and in [Keeping docs in sync](../../../CLAUDE.md#keeping-docs-in-sync) in the root `CLAUDE.md`. Read that first, then `docs/roadmap.md`, `docs/architecture.md`, every file in `docs/specs/` and `docs/areas/`, `docs/development.md` (where this fork keeps what the template keeps in the root README's workflow sections; the root `README.md` is upstream's Marketplace page, so read it only for contradictions), every folder README (`git ls-files '*/README.md'`) and the cards in `backlog/*.md` and `backlog/done/*.md`.
+The rules the docs are meant to follow are in `docs/CLAUDE.md` and in [Keeping docs in sync](../../../CLAUDE.md#keeping-docs-in-sync) in the root `CLAUDE.md`. Read that first, then `docs/roadmap.md`, `docs/architecture.md`, every file in `docs/specs/` and `docs/areas/`, `docs/development.md` (where this fork keeps what the template keeps in the root README's workflow sections), the root `README.md` (the fork's page for users and its Marketplace page), every folder README (`git ls-files '*/README.md'`) and the cards in `backlog/*.md` and `backlog/done/*.md`.
 
 ## Checks
 

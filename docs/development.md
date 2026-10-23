@@ -2,7 +2,7 @@
 
 # Development
 
-The fork's own setup and workflow. The root [README](../README.md) and [CONTRIBUTING](../CONTRIBUTING.md) are upstream's and stay as they are; what the fork adds is written here. For what upstream documents (install, scripts, code style), see those two.
+The fork's own setup and workflow. The root [README](../README.md) is the fork's page for users (and its Marketplace page), so the dev workflow is written here instead. [CONTRIBUTING](../CONTRIBUTING.md) is upstream's and stays as it is. For what upstream documents (install, scripts, code style), see those two.
 
 ## Layout
 

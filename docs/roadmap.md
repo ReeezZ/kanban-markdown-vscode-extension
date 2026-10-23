@@ -2,7 +2,7 @@
 
 # Roadmap
 
-A personal fork of [Kanban Markdown](https://github.com/LachyFS/kanban-markdown-vscode-extension), the VS Code extension that shows Markdown files as a board. The fork fixes card ordering in the epic view, then improves card editing and board polish, and is eventually published under its own name. Fixes that upstream could take stay self-contained commits, so they can be offered as PRs (see [Upstream](git-workflow.md#upstream)). What each part of this doc holds is under [Roadmap](CLAUDE.md#roadmap).
+A personal fork of [Kanban Markdown](https://github.com/LachyFS/kanban-markdown-vscode-extension), the VS Code extension that shows Markdown files as a board. The fork fixes card ordering in the epic view, then improves card editing and board polish, and is eventually published under its own name, which is set early so the README can present the fork as its own. Upstream PRs are a nice-to-have (see [Upstream](git-workflow.md#upstream)). What each part of this doc holds is under [Roadmap](CLAUDE.md#roadmap).
 
 ## Shipped
 
@@ -14,14 +14,13 @@ Nothing yet.
 
 Goal: dragging a card keeps its place, also in the epic view, and a bad order key can't break a drag.
 
-Why now: the epic view is the reason for the fork, and until `equal-order-keys` ships every `order` key must be unique across the board. The two fixes are also the best test of whether the codebase is easy to work in. They stay self-contained commits, so they can go upstream as PRs.
+Why now: the epic view is the reason for the fork, and until `equal-order-keys` ships every `order` key must be unique across the board. The two fixes are also the best test of whether the codebase is easy to work in.
 
 Done when:
 
 - [ ] a drop in a lane keeps its position after reload;
 - [ ] equal keys no longer throw, and errors are visible;
 - [ ] both have unit tests;
-- [ ] the fixes are self-contained commits;
 - [ ] the extension and webview area docs exist;
 - [ ] F5 opens a sample board to drag on, and a drag there leaves only the moved card changed in `git diff`.
 
@@ -29,7 +28,7 @@ Done when:
 
 Goal: the card editor matches the board: the status list comes from the configured columns, links open, task lists work, and saving a card doesn't lose data.
 
-Why now: the editor is where the daily friction is, and these are small upstream-able fixes. The serializer work needs a spec first because it touches persistence.
+Why now: the editor is where the daily friction is, and these are small fixes. The serializer work needs a spec first because it touches persistence.
 
 Done when:
 
@@ -53,7 +52,7 @@ Done when:
 
 Goal: the fork has its own name, publisher and settings prefix, and is published on the Marketplace and Open VSX.
 
-Why now: last, because the name and publisher ID can't be changed once created, and publishing is worth more once the fixes are in. When a `v*` tag may go to origin is in [Releases](git-workflow.md#releases).
+Why now: last, because the publisher ID can't be changed once created, and publishing is worth more once the fixes are in. The name itself is set early (card `fork-name-and-publisher`, high priority), since it's only text until the publisher is registered; the settings prefix waits for this phase. When a `v*` tag may go to origin is in [Releases](git-workflow.md#releases).
 
 Done when:
 

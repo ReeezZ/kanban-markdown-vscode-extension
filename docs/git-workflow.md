@@ -128,7 +128,8 @@ included: git's default `Merge branch '…'` subject is rejected, so pass
 
 - **Sync.** `git fetch upstream`, then `git merge upstream/main -m "chore: merge upstream <ref>"`. The `-m` is needed because the hook rejects git's default subject. Then run `.githooks/pre-commit ORIG_HEAD`, which checks what the merge changed.
 - **PRs.** Make a `pr/<card-id>` branch from `upstream/main` and cherry-pick the code commits onto it. Run the checks in CONTRIBUTING by hand, since upstream has no hooks. Upstream is on pnpm 9, so a lockfile change is regenerated on the PR branch, not cherry-picked.
-- **Keep fixes pickable.** A fix is its own commit or commits, with no fork-only files and no `backlog/` changes in it (see [Fork and upstream](../CLAUDE.md#fork-and-upstream)).
+- **Pickable when cheap.** Upstream PRs are a nice-to-have (see [Fork and upstream](../CLAUDE.md#fork-and-upstream)). A fix that stays its own commit, with no fork-only files and no `backlog/` changes in it, can be cherry-picked; one that can't is ported by hand if it ever goes upstream.
+- **README.** The root README is the fork's own; on a sync, its conflicts resolve to ours.
 
 ## Why Conventional Commits
 

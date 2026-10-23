@@ -29,8 +29,7 @@
   - the card file format (`src/shared/featureFrontmatter.ts`, the filename patterns in `src/extension/featureFileUtils.ts`);
   - `workspaceState` keys;
   - the `contributes.configuration` schema in `package.json`;
-  - command and view IDs;
-  - anything that stops a fix from cherry-picking onto `upstream/main` (see [Fork and upstream](#fork-and-upstream)).
+  - command and view IDs.
 - For everything else, pick what fits the task: either plan (and write the spec) first, or prototype first and update the docs afterwards, with a spec written after the fact if one is still needed. Prototyping suits small, reversible or look-and-feel changes. Planning first suits work with open design questions or a wide reach. If unsure, say which you'd pick and why.
 - Planning a new feature doesn't reshape the roadmap: if it belongs to a roadmap phase or backlog card, find it, and only that item's status changes (the card's `status`, the spec's Status), once the work is done. Work that's decided and done right away (a workflow tweak, a docs fix, a quick idea) needs no card; don't offer one just to have one. Reordering, merging or rewording other roadmap items is a separate request.
 - Small, reviewable diffs either way — one component or one endpoint at a time.
@@ -57,7 +56,7 @@
 ### Documentation Consistency
 
 - Point out any inconsistencies between the README, roadmap, architecture doc, area docs and specs. If a spec is out of date, propose a specific change to the spec or roadmap rather than just noting the mismatch.
-- Write each fact in one place. Other docs link to it instead of repeating it; `docs/development.md` holds the repo's layout, checks and workflow notes (the root README is upstream's Marketplace page and stays untouched), `docs/git-workflow.md` the branching, merging and commit conventions, a folder README its folder's own setup, CLAUDE.md only what's specific to the agent.
+- Write each fact in one place. Other docs link to it instead of repeating it; `docs/development.md` holds the repo's layout, checks and workflow notes (the root README is the fork's Marketplace page, for users), `docs/git-workflow.md` the branching, merging and commit conventions, a folder README its folder's own setup, CLAUDE.md only what's specific to the agent.
 - Cite a section of a doc with a link to its heading's anchor (`[Testing](CLAUDE.md#testing)`), not a quoted title, so the docs check reports it when the heading is renamed. A bold bullet label has no anchor: give it a heading first, or name it in plain text next to a link to its parent section. Renaming a heading means running `./scripts/docs_check.py --check` before the commit.
 
 ### Workflow Improvement
@@ -108,11 +107,11 @@ Rules for one folder only are in its own CLAUDE.md (none yet), which loads once 
 
 ## Fork and upstream
 
-This repo is a fork of `LachyFS/kanban-markdown-vscode-extension`. The steps for syncing and for upstream PRs are in [Upstream in docs/git-workflow.md](docs/git-workflow.md#upstream).
+This repo is a fork of `LachyFS/kanban-markdown-vscode-extension`. The steps for syncing and for upstream PRs are in [Upstream in docs/git-workflow.md](docs/git-workflow.md#upstream). Upstream PRs are a nice-to-have: being pickable onto `upstream/main` never outweighs a better design, and a fix is ported by hand if it ever goes upstream. Staying close to upstream's code still keeps syncs cheap.
 
 - Upstream's conventions win over this file's where they overlap: formatting, naming, folder layout.
 - Never reformat upstream code. Prettier is configured upstream, but the code doesn't follow it; don't run it over files.
-- A commit meant for upstream touches no fork-only file (`docs/`, `backlog/`, `.claude/`, `.githooks/`, `scripts/*.py`, `CLAUDE.md`).
-- Card status changes go in their own `docs(backlog)` commits, so the code commits cherry-pick without `backlog/`.
+- Prefer code commits that touch no fork-only file (`docs/`, `backlog/`, `.claude/`, `.githooks/`, `scripts/*.py`, `CLAUDE.md`), so they stay pickable when that's cheap.
+- Card status changes go in their own `docs(backlog)` commits.
 - Match the comment density of the file being edited. The rules in [Comments in code](#comments-in-code) apply to new files; in an upstream file, follow its style.
-- The README and CONTRIBUTING are upstream's. They get no fork workflow; it lives in [docs/development.md](docs/development.md).
+- The root README is the fork's own: what the fork is, its credit to upstream, and upstream's feature docs as long as they still fit. It's also the Marketplace page, so it gets no dev workflow; that lives in [docs/development.md](docs/development.md). CONTRIBUTING stays upstream's. On an upstream sync, README conflicts resolve to ours.

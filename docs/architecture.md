@@ -8,7 +8,7 @@ What goes here, and what goes in an area doc instead, is under [Architecture doc
 
 - Show a folder of Markdown files as a Kanban board inside VS Code, and write every change back to those files, so the cards stay plain text in git.
 - No server and no database: the files are the state. A user can edit a card in any editor, and the board follows.
-- Stays close to upstream, so fixes can still go back as PRs ([Upstream](git-workflow.md#upstream)).
+- Stays close enough to upstream that syncs stay cheap; upstream PRs are a nice-to-have, not a constraint on design ([Upstream](git-workflow.md#upstream)).
 - The extension host and the webview are separate bundles that only talk by messages.
 - UI strings exist in en, es and pt.
 
@@ -31,4 +31,3 @@ The host and the webview talk through `postMessage`; `src/shared/types.ts` is th
 - A move computes its key from the cards in the target column, without looking at the epic lane, so a drop in an epic lane can land in the wrong place.
 - Two cards with equal `order` keys make a move throw; the error is not shown to the user.
 - The serializer drops unknown frontmatter fields, so a card edited on the board can lose fields added by hand.
-- The fork's tooling (pnpm 12) differs from upstream's (pnpm 9), so a fix that touches the lockfile can't be cherry-picked as is.
