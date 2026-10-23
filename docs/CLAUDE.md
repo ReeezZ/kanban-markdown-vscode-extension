@@ -32,7 +32,7 @@ An area doc (`docs/areas/<area>.md`) is a conceptual sketch of how one part of t
 - One fact in one place within a doc too: a section doesn't restate the reason of a decision, and a behaviour bullet doesn't paraphrase the decision it cites.
 - No Tests section. A test gap that is a real risk is a line under architecture › Risks.
 - "Not built" lists only what's deliberately left out and isn't a roadmap or backlog item yet; those items get a link (the `backlog/` folder, not a card file).
-- A Mermaid diagram where it makes something easier to understand than text alone, or adds a view text can't give: a flow across modules, a loop, a sequence of messages, an overview of how the parts relate. It may sit next to text about the same thing; the text then adds the why and the edge rules, not a step-by-step reading of the diagram. Not as decoration. Checked against the code and rendered to check the syntax (a scratchpad HTML page loading `mermaid@11.4.1` from cdn.jsdelivr.net, screenshotted with a headless browser).
+- A Mermaid diagram where it makes something easier to understand than text alone, or adds a view text can't give: a flow across modules, a loop, a sequence of messages, an overview of how the parts relate. It may sit next to text about the same thing; the text then adds the why and the edge rules, not a step-by-step reading of the diagram. Not as decoration. Checked against the code, its syntax checked with `mermaid.parse` from a scratchpad script, and looked at by the user in VS Code's Markdown preview before the merge.
 
 ## Folder README
 
