@@ -20,6 +20,10 @@ main=$(git worktree list --porcelain | sed -n '1s/^worktree //p')
 
 step() { echo "post-checkout: $*" >&2; }
 
+# pnpm 12 keeps its lock folders in $XDG_RUNTIME_DIR, falling back to /tmp,
+# which is read-only in Claude Code's Bash sandbox. $TMPDIR is writable there.
+export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-${TMPDIR:-/tmp}}"
+
 step "pnpm install --frozen-lockfile --prefer-offline"
 (cd "$worktree" && pnpm install --frozen-lockfile --prefer-offline >&2) ||
   step "install failed; run it by hand"
