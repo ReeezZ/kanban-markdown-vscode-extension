@@ -29,6 +29,6 @@ The setting is a change to the `contributes.configuration` schema, so propose it
 **Open questions**
 
 - Fixed palette or a free colour picker?
-- Setting key prefix: depends on [`settings-prefix`](settings-prefix.md), so build with the current one and rename with that card.
+- Setting key prefix: build with the current one; [`settings-prefix`](settings-prefix.md) renames it, and `labelColors` is one of the settings it will rename.
 
 **Needs:** none

@@ -19,7 +19,7 @@ Steps from the handoff:
 
 - Marketplace: Microsoft account, Azure DevOps organisation, publisher, then `vsce publish`. Azure DevOps retires global PATs on 2026-12-01, so use Entra ID (`vsce publish --azure-credential`) after that date.
 - Open VSX: GitHub login, an Eclipse account, the Publisher Agreement, an access token, `ovsx create-namespace`, `ovsx publish`.
-- `release.yml` publishes as LachyFS on any `v*` tag push, so no tag goes to origin before this card.
+- No tag goes to origin before the name and publisher are set; see [Releases](../docs/git-workflow.md#releases).
 - vsce doesn't read `.gitignore`, so anything new and untracked in the repo root ends up in the `.vsix` unless `.vscodeignore` excludes it.
 - After publishing, swap the extension ID in `.devcontainer/devcontainer.json` and in guitar_companion.
 

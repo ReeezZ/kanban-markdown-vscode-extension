@@ -28,6 +28,6 @@ This needs a new TipTap dependency (`@tiptap/extension-task-list` and `-task-ite
 
 **Open questions**
 
-- Does `tiptap-markdown` 0.9 write the task list syntax back correctly, or does this depend on [`markdown-round-trip-spike`](markdown-round-trip-spike.md)?
+- Does `tiptap-markdown` 0.9 write the task list syntax back correctly, Use the result of [`markdown-round-trip-spike`](markdown-round-trip-spike.md) if it exists by then.
 
 **Needs:** none

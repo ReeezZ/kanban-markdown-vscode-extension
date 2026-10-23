@@ -26,4 +26,4 @@ order: "aD"
 
 - Does the fork keep upstream's version numbers or start its own?
 
-**Needs:** none
+**Needs:** [`fork-name-and-publisher`](fork-name-and-publisher.md)
