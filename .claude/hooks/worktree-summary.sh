@@ -34,7 +34,7 @@ all_worktrees() {
     echo
   )
 }
-main_checkout=$(all_worktrees | head -1 | cut -f1)
+main_checkout=$(all_worktrees | awk 'NR == 1' | cut -f1)
 
 describe_path() {
   case "$1" in
