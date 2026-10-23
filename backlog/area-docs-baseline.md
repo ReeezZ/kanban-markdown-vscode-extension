@@ -1,12 +1,12 @@
 ---
 id: "area-docs-baseline"
-status: "ready"
+status: "in-progress"
 priority: "high"
 assignee: null
 epic: "01 Foundation"
 dueDate: null
 created: "2026-10-23T15:04:03.000Z"
-modified: "2026-10-23T16:00:00.000Z"
+modified: "2026-10-23T18:00:00.000Z"
 completedAt: null
 labels: ["chore", "workflow"]
 order: "a0"
