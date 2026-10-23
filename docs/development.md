@@ -12,6 +12,7 @@ The fork's own setup and workflow. The root [README](../README.md) and [CONTRIBU
 - `tests/`: unit tests (Vitest) and the integration tests that run in a VS Code host.
 - `l10n/` and `package.nls*.json`: the en/es/pt strings. `pnpm check-l10n` checks that the files match.
 - `scripts/`: upstream's tsx scripts (`release.ts`, `check-l10n.ts`) and the doc check. See [scripts/README.md](../scripts/README.md) for when a script is shell and when it's Python.
+- `docs/`: roadmap, architecture, specs and area docs; what each holds is in [docs/CLAUDE.md](CLAUDE.md).
 - `backlog/`: one Markdown card per planned feature, fix or idea, grouped by roadmap phase. It's shown as a board by the Kanban Markdown extension; the card format is in [docs/CLAUDE.md](CLAUDE.md#backlog).
 - `.devcontainer/`, `.githooks/`, `.claude/`: the container, the git hooks and the Claude Code settings, hooks and skills.
 

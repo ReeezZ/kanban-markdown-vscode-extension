@@ -14,14 +14,16 @@ Nothing yet.
 
 Goal: dragging a card keeps its place, also in the epic view, and a bad order key can't break a drag.
 
-Why now: the epic view is the reason for the fork, and until bug 2 is fixed every `order` key must be unique across the board. The two fixes are also the best test of whether the codebase is easy to work in. They stay self-contained commits, so they can go upstream as PRs.
+Why now: the epic view is the reason for the fork, and until `equal-order-keys` ships every `order` key must be unique across the board. The two fixes are also the best test of whether the codebase is easy to work in. They stay self-contained commits, so they can go upstream as PRs.
 
 Done when:
 
 - [ ] a drop in a lane keeps its position after reload;
 - [ ] equal keys no longer throw, and errors are visible;
 - [ ] both have unit tests;
-- [ ] the fixes are self-contained commits.
+- [ ] the fixes are self-contained commits;
+- [ ] the extension and webview area docs exist;
+- [ ] F5 opens a sample board to drag on, and a drag there leaves only the moved card changed in `git diff`.
 
 ### Phase 2: Card Editing
 
@@ -44,15 +46,17 @@ Why now: after the editing fixes, and the send-to-top/bottom work builds on the 
 Done when:
 
 - [ ] a label has a colour that is set in one place and shown on the board;
-- [ ] a card can be sent to the top or bottom of its lane.
+- [ ] a card can be sent to the top or bottom of its lane;
+- [ ] a column can be set to refuse drops.
 
 ### Phase 4: Publish
 
 Goal: the fork has its own name, publisher and settings prefix, and is published on the Marketplace and Open VSX.
 
-Why now: last, because the name and publisher ID can't be changed once created, and publishing is worth more once the fixes are in. No `v*` tag goes to origin before this phase, since `release.yml` publishes as LachyFS.
+Why now: last, because the name and publisher ID can't be changed once created, and publishing is worth more once the fixes are in. When a `v*` tag may go to origin is in [Releases](git-workflow.md#releases).
 
 Done when:
 
+- [ ] settings and commands use the fork's own prefix;
 - [ ] the extension installs from the Marketplace under its own ID;
 - [ ] the changelog covers the fork's releases.
