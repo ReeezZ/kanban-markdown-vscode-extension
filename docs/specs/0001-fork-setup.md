@@ -108,6 +108,27 @@ In the container:
     - On Debian bookworm, CI's `libasound2t64` is called `libasound2`.
     - `_moveFeature` has no unit tests.
 
+## Findings from step 8
+
+Step 8 turned up problems with the sandbox and the container boundary. This section holds what was decided and what's still open; it's resolved before step 9's fold.
+
+### Decided and done
+
+- **Forwarding from the Mac.** VS Code forwards host credentials into the container, so the container isn't a boundary for them on its own (the Dev Containers maintainers say so in microsoft/vscode-remote-release#4426). Set in the Mac's VS Code User settings, not in `devcontainer.json`, which code in the container could change: `dev.containers.gitCredentialHelperConfigLocation: "none"` and `dev.containers.copyGitConfig: false`. The SSH agent is still forwarded (no setting exists); it holds no keys, and keys stay out of it. Pushing and fetching happen on the Mac.
+- **Read-only `.git/hooks` and `.git/config`** (`devcontainer.json` mounts). Git on the Mac runs what they hold, and changes there don't show in `git status`. `.devcontainer/` and `.vscode/` stay writable: they're tracked, so check `git status` before a rebuild.
+- **The sandbox starts:** `runArgs: --security-opt seccomp=unconfined` (Docker's default profile blocks the user namespaces bubblewrap needs), plus `enableWeakerNestedSandbox: true` in `/home/node/.claude/settings.json`. This replaces the first sandbox bullet under [Decisions](#decisions), which assumed `enableWeakerNestedSandbox` alone was enough.
+- **Fixes:** the worktree summary hook's SIGPIPE (`65bb9a7`) and `env -u ELECTRON_RUN_AS_NODE` in the agent's e2e command (`bac1fba`).
+
+### Open
+
+1. **The e2e command still runs sandboxed** (DNS fails, `~/.vscode` is read-only, Electron ends with SIGTRAP), although the call matched both `excludedCommands` entries exactly, with no `cd` and no redirect (either keeps a call sandboxed, per the docs). Not yet checked: a trivial excluded entry to see whether exclusion works at all, `/status` for where the sandbox settings come from, whether `env -u …` is matched literally. Fallbacks: the unsandboxed retry per call, or `allowNestedUserNamespaces`. `/merge` runs the e2e in a worktree, which needs a `cd`.
+2. **`pnpm install` in a new worktree fails in the sandbox:** `Failed to open the store operation lock at "pnpm-store-operation-locks": Read-only file system`. The store (`.pnpm-store/`) is writable; `allowWrite` for `~/.local/state/pnpm`, `~/.cache/pnpm` and `~/.local/share/pnpm` didn't help and was reverted. Where the lock goes is unknown.
+3. **`git worktree remove` in the sandbox** failed once with `Device or resource busy` on `.git/worktrees/<name>` (an earlier run worked). Outside the sandbox it works.
+4. **`git branch -d` exits 1** (`could not lock config file .git/config`), because it can't drop the branch's config section from the read-only file, though the branch is deleted. `/merge`'s cleanup checks `git branch --list` instead of the exit code.
+5. **Phantom untracked files in the sandbox.** It mounts `/dev/null` over blocked paths that don't exist, so `git status` inside the sandbox lists `.bashrc`, `.gitconfig`, `.mcp.json`, `.idea`, `.claude/agents` and others as untracked character devices; outside the sandbox they don't exist. Excluding them in `.git/info/exclude` was tried and dropped, since it would also hide a real file created there later. Proposed: `/branch` and `/merge` ignore untracked character devices when checking for a clean checkout, and report it with `/feedback`.
+6. **Docs at the fold:** the Devcontainer section of `docs/development.md` (forwarding settings, read-only mounts, `git status` before a rebuild, the sandbox settings), the e2e rule in `CLAUDE.md` › Testing (no `cd`, no redirect), and the skills for 1–5.
+7. **Prompts for guitar_companion and the template**, once 1–5 work: the forwarding settings, the read-only mounts and the sandbox setup.
+
 ## Implementation order
 
 ### 1. Spec (host)
