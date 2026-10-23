@@ -40,7 +40,8 @@ In the container:
    - `node -v` prints 22.x, and `pnpm -v` prints 12.15.0.
    - `python3 --version` is ≥ 3.10, and `bash --version` is ≥ 5.
    - `jq` and `xvfb-run` exist.
-   - `git config core.hooksPath` prints `.githooks`.
+   - `git config --system core.hooksPath` prints `.githooks`, and `git config --local core.hooksPath` prints nothing.
+   - `/sandbox` shows no Dependencies tab, and a sandboxed `ls` runs without a `bwrap` error.
    - `git status` is clean after `pnpm install --frozen-lockfile`.
 2. **App checks:** `pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm check-l10n`.
 3. **Integration tests:** `pnpm run build:extension && xvfb-run -a pnpm run test:integration`.
@@ -77,6 +78,10 @@ In the container:
   - The bigger diff against upstream is accepted. Upstream is still on pnpm 9, so a fix that touches the lockfile has to be regenerated on the upstream PR branch.
 - **Install scripts: only esbuild.** `keytar` is only used by `vsce login`'s credential store, and CI uses env PATs. `@vscode/vsce-sign` stays off unless `pnpm package` needs it. `minimumReleaseAge: 1440` is set explicitly, because the pnpm 11 default is unverified.
 - **A devcontainer.** The macOS host has bash 3.2 and no GNU coreutils, so the template's hooks don't run there. The container uses Node 22, and CI moves from Node 20 (EOL since April 2026) to 22.
+- **The hooks path lives in the container's system git config** (`/etc/gitconfig`), not in `.git/config`. The host and the container share `.git/config` through the bind mount, so a repo-level setting would also run the hooks on the Mac, under bash 3.2 and with the host's `node_modules`. `--global` isn't used because VS Code copies the host's `.gitconfig` into the container. On the Mac, commits run no hooks.
+- **Claude Code's Bash sandbox in the container.** On Linux it needs `bubblewrap` and `socat`; if they're missing, Claude Code runs commands unsandboxed without an error ([Sandboxing › Set up Linux and WSL2](https://code.claude.com/docs/en/sandboxing#set-up-linux-and-wsl2)).
+  - In an unprivileged container, bubblewrap can't mount a fresh `/proc`. `sandbox.enableWeakerNestedSandbox: true` reuses the container's `/proc`, which is acceptable because the container is the outer boundary ([Bubblewrap fails to start inside a container](https://code.claude.com/docs/en/sandboxing#bubblewrap-fails-to-start-inside-a-container)). It goes in the container's user settings (`/home/node/.claude/settings.json`), so it never applies on the host. The user sets it by hand: the auto-mode classifier blocks Claude from writing its own sandbox settings.
+  - Electron can't create user namespaces inside the sandbox (`No usable sandbox!`), so the e2e command is listed in `sandbox.excludedCommands` in the project's `.claude/settings.json` ([Chromium or rootless Podman fails inside the sandbox](https://code.claude.com/docs/en/sandboxing#chromium-or-rootless-podman-fails-inside-the-sandbox-on-linux)). That leaves upstream's test runner unchanged.
 - **The full template.** Specs and the fold, area docs, breadcrumbs, `Superseded-by` and all eight skills, so the fork works spec-driven like the template's origin project. The docs are thin so far; `area-docs-baseline` is the first Phase 1 card.
 - **Upstream's conventions win.**
   - The README is the Marketplace page, and it and CONTRIBUTING get no fork workflow. The template's root README sections go into `docs/development.md` instead.
@@ -126,7 +131,7 @@ Commit: `build: move to pnpm 12 and allow install scripts only for esbuild`.
 **`.devcontainer/Dockerfile`**
 
 - Base image: `mcr.microsoft.com/devcontainers/typescript-node:22-bookworm`.
-- One apt layer: `xvfb xauth libnspr4 libnss3 libatk1.0-0 libatk-bridge2.0-0 libgtk-3-0 libglib2.0-0 libgbm1 libxkbcommon0 libasound2 libxss1 libsecret-1-0 jq`.
+- One apt layer: `xvfb xauth libnspr4 libnss3 libatk1.0-0 libatk-bridge2.0-0 libgtk-3-0 libglib2.0-0 libgbm1 libxkbcommon0 libasound2 libxss1 libsecret-1-0 jq bubblewrap socat`.
 - pnpm is installed in `post-create.sh` with `npm install -g`, using the version from `packageManager`. Corepack isn't used: it's unclear whether it handles pnpm 12's binary distribution.
 
 **`.devcontainer/devcontainer.json`**
@@ -145,7 +150,7 @@ Commit: `build: move to pnpm 12 and allow install scripts only for esbuild`.
 - chown the two volumes;
 - `sudo npm install -g <packageManager>`;
 - `pnpm install --frozen-lockfile`;
-- `git config core.hooksPath .githooks`;
+- `sudo git config --system core.hooksPath .githooks`;
 - `chmod +x` the hooks and `scripts/docs_check.py`.
 
 Commit: `build(devcontainer): add a devcontainer with node 22, pnpm 12 and xvfb`.
@@ -160,6 +165,8 @@ Then the user reopens the folder in the container and starts a new session: "car
 
 - the feedback memory "use subagents to keep the main context clean";
 - the English-docs preference in `~/.claude/CLAUDE.md`.
+
+Before starting that session, the user adds `"sandbox": { "enableWeakerNestedSandbox": true }` to `/home/node/.claude/settings.json` in the container, then runs `/sandbox` to check that it shows no Dependencies tab (see [Decisions](#decisions)).
 
 ### 5. Workflow docs, git hooks, docs check (container)
 
@@ -269,6 +276,8 @@ Adapt:
 - `/orchestrate`: the same e2e command.
 - `/park`: take the highest `order` key on the whole board, until bug 2 is fixed.
 - `/docs-consistency`: read `docs/development.md` where it reads the root README's workflow sections.
+
+Add to `.claude/settings.json`: `"sandbox": { "excludedCommands": ["pnpm run build:extension", "xvfb-run -a pnpm run test:integration"] }`. Every command in a call has to match an entry, so the e2e call is these two commands exactly.
 
 Then `chmod +x .claude/hooks/*.sh`.
 

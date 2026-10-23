@@ -9,5 +9,9 @@ sudo chown node:node node_modules /home/node/.claude
 sudo npm install -g "$(node -p "require('./package.json').packageManager")"
 pnpm install --frozen-lockfile
 
-git config core.hooksPath .githooks
+# In the system config, not the repo's .git/config: that file is shared with the host through the
+# bind mount, and the hooks need the container's bash and node_modules. --global could be
+# overwritten by the host .gitconfig VS Code copies in.
+sudo git config --system core.hooksPath .githooks
+
 chmod +x .githooks/* .claude/hooks/*.sh scripts/docs_check.py 2>/dev/null || true
