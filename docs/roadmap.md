@@ -21,7 +21,7 @@ Done when:
 - [ ] the extension and webview area docs exist;
 - [ ] the move and order logic and the message handling have baseline tests;
 - [ ] the review passes are done, their findings are cards, and the refactors chosen to come first are done;
-- [ ] a provisional name is chosen, the repository carries it and the README presents the fork under it.
+- [ ] a provisional name (Markan) is chosen and the README presents the fork under it.
 
 ### Phase 2: Ordering Fixes
 
