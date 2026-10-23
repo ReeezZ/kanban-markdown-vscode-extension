@@ -15,11 +15,18 @@
     }
   },
   "remoteUser": "node",
+  // Docker's default seccomp profile blocks the user namespaces that Claude
+  // Code's Bash sandbox (bubblewrap) needs.
+  "runArgs": ["--security-opt", "seccomp=unconfined"],
   "mounts": [
     // Keeps the Claude Code login and settings across rebuilds.
     "source=claude-config-${devcontainerId},target=/home/node/.claude,type=volume",
     // The host's node_modules holds binaries for the host platform.
-    "source=node-modules-${devcontainerId},target=${containerWorkspaceFolder}/node_modules,type=volume"
+    "source=node-modules-${devcontainerId},target=${containerWorkspaceFolder}/node_modules,type=volume",
+    // Git on the host runs what these hold, and changes to them don't show up
+    // in git status, so the container can't write them.
+    "source=${localWorkspaceFolder}/.git/hooks,target=${containerWorkspaceFolder}/.git/hooks,type=bind,readonly",
+    "source=${localWorkspaceFolder}/.git/config,target=${containerWorkspaceFolder}/.git/config,type=bind,readonly"
   ],
   "containerEnv": {
     "CLAUDE_CONFIG_DIR": "/home/node/.claude"
