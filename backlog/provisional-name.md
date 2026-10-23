@@ -22,8 +22,7 @@ The GitHub repository keeps its name. Nothing in `package.json`, the settings pr
 **Done when**
 
 - [ ] [`fork-name-and-publisher`](fork-name-and-publisher.md) names Markan as the provisional name, with the bar and the checks, in place of its old shortlist
-- [ ] the roadmap's Phase 1 Done when no longer says the repository carries the name, and the roadmap calls the fork Markan where it names it
-- [ ] `docs/development.md` and other docs that name the fork, not upstream, call it Markan
+- [ ] the roadmap's Phase 1 Done when names Markan and no longer says the repository carries the name
 
 **Out of scope:** renaming the GitHub repository; the README itself ([`readme-rework`](readme-rework.md)).
 
