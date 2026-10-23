@@ -3,7 +3,7 @@ id: "area-docs-baseline"
 status: "ready"
 priority: "high"
 assignee: null
-epic: "01 Ordering Fixes"
+epic: "01 Foundation"
 dueDate: null
 created: "2026-10-23T15:04:03.000Z"
 modified: "2026-10-23T16:00:00.000Z"

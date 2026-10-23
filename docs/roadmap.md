@@ -10,7 +10,20 @@ Nothing yet.
 
 ## Open phases
 
-### Phase 1: Ordering Fixes
+### Phase 1: Foundation
+
+Goal: the codebase is understood and safe to change before any fix or feature: it is documented, has baseline tests, has been reviewed, and the fork has a provisional name.
+
+Why now: the code quality is uneven and `KanbanPanel.ts` has no tests around moves, so the fixes would be built on guesses. The review's findings decide which refactors come before the fixes.
+
+Done when:
+
+- [ ] the extension and webview area docs exist;
+- [ ] the move and order logic and the message handling have baseline tests;
+- [ ] the review passes are done, their findings are cards, and the refactors chosen to come first are done;
+- [ ] a provisional name is chosen, the repository carries it and the README presents the fork under it.
+
+### Phase 2: Ordering Fixes
 
 Goal: dragging a card keeps its place, also in the epic view, and a bad order key can't break a drag.
 
@@ -21,10 +34,9 @@ Done when:
 - [ ] a drop in a lane keeps its position after reload;
 - [ ] equal keys no longer throw, and errors are visible;
 - [ ] both have unit tests;
-- [ ] the extension and webview area docs exist;
 - [ ] F5 opens a sample board to drag on, and a drag there leaves only the moved card changed in `git diff`.
 
-### Phase 2: Card Editing
+### Phase 3: Card Editing
 
 Goal: the card editor matches the board: the status list comes from the configured columns, links open, task lists work, and saving a card doesn't lose data.
 
@@ -36,11 +48,11 @@ Done when:
 - [ ] a save from the board changes nothing but what was edited;
 - [ ] links in a card open, and task lists render and save.
 
-### Phase 3: Board Polish
+### Phase 4: Board Polish
 
 Goal: smaller board features: label colours, send a card to the top or bottom, and rules for dropping into a column.
 
-Why now: after the editing fixes, and the send-to-top/bottom work builds on the lane order from Phase 1.
+Why now: after the editing fixes, and the send-to-top/bottom work builds on the lane order from Phase 2.
 
 Done when:
 
@@ -48,11 +60,11 @@ Done when:
 - [ ] a card can be sent to the top or bottom of its lane;
 - [ ] a column can be set to refuse drops.
 
-### Phase 4: Publish
+### Phase 5: Publish
 
 Goal: the fork has its own name, publisher and settings prefix, and is published on the Marketplace and Open VSX.
 
-Why now: last, because the publisher ID can't be changed once created, and publishing is worth more once the fixes are in. The name itself is set early (card `fork-name-and-publisher`, high priority), since it's only text until the publisher is registered; the settings prefix waits for this phase. When a `v*` tag may go to origin is in [Releases](git-workflow.md#releases).
+Why now: last, because the publisher ID can't be changed once created, and publishing is worth more once the fixes are in. The name is chosen provisionally in Phase 1 so there is time to doubt it; it is confirmed and registered here, together with the publisher and the settings prefix. When a `v*` tag may go to origin is in [Releases](git-workflow.md#releases).
 
 Done when:
 

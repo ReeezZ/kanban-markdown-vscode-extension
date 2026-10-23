@@ -3,7 +3,7 @@ id: "changelog-catch-up"
 status: "backlog"
 priority: "low"
 assignee: null
-epic: "04 Publish"
+epic: "05 Publish"
 dueDate: null
 created: "2026-10-23T15:04:03.000Z"
 modified: "2026-10-23T15:04:03.000Z"

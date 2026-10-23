@@ -3,7 +3,7 @@ id: "status-options-from-columns"
 status: "backlog"
 priority: "high"
 assignee: null
-epic: "02 Card Editing"
+epic: "03 Card Editing"
 dueDate: null
 created: "2026-10-23T15:04:03.000Z"
 modified: "2026-10-23T15:04:03.000Z"

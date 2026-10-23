@@ -3,7 +3,7 @@ id: "label-colours"
 status: "backlog"
 priority: "medium"
 assignee: null
-epic: "03 Board Polish"
+epic: "04 Board Polish"
 dueDate: null
 created: "2026-10-23T15:04:03.000Z"
 modified: "2026-10-23T15:04:03.000Z"
