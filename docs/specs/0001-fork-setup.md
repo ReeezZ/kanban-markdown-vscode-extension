@@ -4,7 +4,7 @@
 
 ## Status
 
-Approved
+Done — 2026-10-23
 
 - Phase: Scaffold/Infra
 
@@ -119,7 +119,16 @@ Step 8 turned up problems with the sandbox and the container boundary. This sect
 - **The sandbox starts:** `runArgs: --security-opt seccomp=unconfined` (Docker's default profile blocks the user namespaces bubblewrap needs), plus `enableWeakerNestedSandbox: true` in `/home/node/.claude/settings.json`. This replaces the first sandbox bullet under [Decisions](#decisions), which assumed `enableWeakerNestedSandbox` alone was enough.
 - **Fixes:** the worktree summary hook's SIGPIPE (`65bb9a7`) and `env -u ELECTRON_RUN_AS_NODE` in the agent's e2e command (`bac1fba`).
 
-### Open
+### Resolved after step 8
+
+- **1:** `env -u …` is dropped before matching, `xvfb-run` isn't; the entry is now `xvfb-run -a pnpm run test:integration`.
+- **2:** pnpm 12's lock folders go to `$XDG_RUNTIME_DIR`, else `/tmp`, read-only in the sandbox; `post-checkout` falls back to `$TMPDIR` (`887dd5e`). The `allowWrite` entries were dropped.
+- **3:** not reproduced; `/merge` retries unsandboxed if it recurs.
+- **4:** by design; `/merge` checks `git branch --list`.
+- **5:** the placeholders are real empty files while a sandboxed command runs; `/branch` and `/merge` ignore character devices.
+- **Pushing:** from VS Code's git UI in the container via askpass, force pushes from the Mac, commits and branches through the agent. Token scope and a network allowlist are parked as cards.
+
+### Open (as found in step 8)
 
 1. **The e2e command still runs sandboxed** (DNS fails, `~/.vscode` is read-only, Electron ends with SIGTRAP), although the call matched both `excludedCommands` entries exactly, with no `cd` and no redirect (either keeps a call sandboxed, per the docs). Not yet checked: a trivial excluded entry to see whether exclusion works at all, `/status` for where the sandbox settings come from, whether `env -u …` is matched literally. Fallbacks: the unsandboxed retry per call, or `allowNestedUserNamespaces`. `/merge` runs the e2e in a worktree, which needs a `cd`.
 2. **`pnpm install` in a new worktree fails in the sandbox:** `Failed to open the store operation lock at "pnpm-store-operation-locks": Read-only file system`. The store (`.pnpm-store/`) is writable; `allowWrite` for `~/.local/state/pnpm`, `~/.cache/pnpm` and `~/.local/share/pnpm` didn't help and was reverted. Where the lock goes is unknown.
