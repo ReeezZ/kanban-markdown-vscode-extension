@@ -127,7 +127,7 @@ Commit: `build: move to pnpm 12 and allow install scripts only for esbuild`.
 
 - Base image: `mcr.microsoft.com/devcontainers/typescript-node:22-bookworm`.
 - One apt layer: `xvfb xauth libnspr4 libnss3 libatk1.0-0 libatk-bridge2.0-0 libgtk-3-0 libglib2.0-0 libgbm1 libxkbcommon0 libasound2 libxss1 libsecret-1-0 jq`.
-- `npm install -g corepack@latest`, because the bundled corepack may have outdated signing keys.
+- pnpm is installed in `post-create.sh` with `npm install -g`, using the version from `packageManager`. Corepack isn't used: it's unclear whether it handles pnpm 12's binary distribution.
 
 **`.devcontainer/devcontainer.json`**
 
@@ -137,13 +137,13 @@ Commit: `build: move to pnpm 12 and allow install scripts only for esbuild`.
   - `/home/node/.claude`, so the Claude login survives a rebuild;
   - `node_modules`, because the host's `node_modules` holds darwin binaries.
 - A read-only bind of `${localEnv:HOME}/git/agentic_template` to `/workspaces/agentic_template`, as the copy source for steps 5–6.
-- `containerEnv`: `CLAUDE_CONFIG_DIR=/home/node/.claude`, `COREPACK_ENABLE_DOWNLOAD_PROMPT=0`.
+- `containerEnv`: `CLAUDE_CONFIG_DIR=/home/node/.claude`.
 - `remoteUser: node`. Add `runArgs: ["--shm-size=1g"]` only if Electron crashes.
 
 **`.devcontainer/post-create.sh`**
 
 - chown the two volumes;
-- `corepack enable pnpm`;
+- `sudo npm install -g <packageManager>`;
 - `pnpm install --frozen-lockfile`;
 - `git config core.hooksPath .githooks`;
 - `chmod +x` the hooks and `scripts/docs_check.py`.
