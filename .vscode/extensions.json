@@ -1,3 +1,7 @@
 {
-  "recommendations": ["dbaeumer.vscode-eslint", "LachyFS.kanban-markdown"]
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "LachyFS.kanban-markdown",
+    "constellationgraph.constellationgraph"
+  ]
 }

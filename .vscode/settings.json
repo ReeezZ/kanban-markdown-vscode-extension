@@ -33,5 +33,15 @@
   ],
   "kanban-markdown.showBuildWithAI": false,
   "kanban-markdown.defaultPriority": "low",
-  "js/ts.tsdk.path": "node_modules/typescript/lib"
+  "js/ts.tsdk.path": "node_modules/typescript/lib",
+  "constellation.exclude": [
+    "**/node_modules/**",
+    "**/.git/**",
+    "**/dist/**",
+    "**/out/**",
+    "**/build/**",
+    ".claude/worktrees/**",
+    ".vscode-test/**",
+    ".pnpm-store/**"
+  ]
 }

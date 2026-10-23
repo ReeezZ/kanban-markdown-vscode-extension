@@ -10,7 +10,8 @@
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
         "anthropic.claude-code",
-        "LachyFS.kanban-markdown"
+        "LachyFS.kanban-markdown",
+        "ConstellationGraph.ConstellationGraph"
       ]
     }
   },
