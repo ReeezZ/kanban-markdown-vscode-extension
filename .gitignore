@@ -11,3 +11,4 @@ releases/
 .claude/
 .devtool/
 coverage/
+.gitconfig-personal
