@@ -3,7 +3,7 @@ id: "sandbox-network-allowlist"
 status: "backlog"
 priority: "low"
 assignee: null
-epic: "04 Publish"
+epic: "XX Workflow v2"
 dueDate: null
 created: "2026-10-23T17:11:58.000Z"
 modified: "2026-10-23T17:11:58.000Z"
