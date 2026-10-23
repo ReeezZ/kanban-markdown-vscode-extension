@@ -99,7 +99,7 @@ Rules for one folder only are in its own CLAUDE.md (none yet), which loads once 
 
 - `src/shared/types.ts` is the host↔webview contract. Change both sides (`src/extension` and `src/webview`) in one commit.
 - `src/extension` and `src/shared` use relative imports only and no DOM types, because `tsconfig.integration.json` compiles them without the `@/` alias.
-- New UI strings need en/es/pt entries in `l10n/` or `package.nls*.json`. Check them with `pnpm check-l10n`.
+- New UI strings need en/es/pt entries in `l10n/` or `package.nls*.json`. Check them with `node --import tsx scripts/check-l10n.ts`, the script of `pnpm check-l10n`, which fails in the Bash sandbox.
 
 ### Testing
 

@@ -58,8 +58,10 @@ check_app() {
 }
 
 check_l10n() {
-  step "l10n: pnpm check-l10n"
-  pnpm check-l10n >&2 || fail "Fix the l10n files above and stage again."
+  # The script of `pnpm check-l10n`, run through tsx's loader: the tsx CLI
+  # listens on a Unix socket, which Claude Code's Bash sandbox doesn't allow.
+  step "l10n: check-l10n"
+  node --import tsx scripts/check-l10n.ts >&2 || fail "Fix the l10n files above and stage again."
 }
 
 scripts/docs_check.py --check
