@@ -56,7 +56,7 @@ checkout is asked when it starts (see below).
 
 `pnpm release:patch`, `release:minor` and `release:major` (upstream's `scripts/release.ts`) write the `chore: release vX.Y.Z` commit and the tag. The CHANGELOG is written by hand first, so the release commit picks it up.
 
-`release.yml` publishes as LachyFS on any `v*` tag push. No `v*` tag goes to `origin` until the fork's name and publisher are set (Phase 4 of the [roadmap](roadmap.md)).
+`release.yml` publishes as LachyFS on any `v*` tag push. No `v*` tag goes to `origin` until the fork's name and publisher are set ([Phase 5 of the roadmap](roadmap.md#phase-5-publish)).
 
 ### Dependabot PRs
 
