@@ -1,12 +1,12 @@
 ---
 id: "fork-name-and-publisher"
 status: "backlog"
-priority: "high"
+priority: "medium"
 assignee: null
 epic: "05 Publish"
 dueDate: null
 created: "2026-10-23T15:04:03.000Z"
-modified: "2026-10-23T18:07:50.000Z"
+modified: "2026-10-23T18:43:18.000Z"
 completedAt: null
 labels: ["chore", "infra"]
 order: "aB"
