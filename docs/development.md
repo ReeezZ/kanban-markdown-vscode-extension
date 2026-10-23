@@ -23,6 +23,25 @@ The agent workflow runs in the devcontainer in `.devcontainer/`: Node 22, pnpm 1
 - The hooks path is `core.hooksPath=.githooks` in the container's system git config (`/etc/gitconfig`), not in `.git/config`. The macOS host shares `.git/config`, has bash 3.2 and its own `node_modules`, so on the Mac commits run no hooks.
 - The Claude login and `node_modules` live in named volumes, so they survive a rebuild.
 - Worktrees under `.claude/worktrees/` sit on the bind mount, so pnpm keeps their store at the repo root, in `.pnpm-store/` (ignored by git and vsce). It is pnpm's default location, shared by all worktrees, and their `node_modules` hardlink into it.
+- pnpm 12, not upstream's 9: pnpm 9 is past its end of life with open advisories. pnpm 12 runs install scripts only for allow-listed packages (`allowBuilds` in `pnpm-workspace.yaml`: esbuild only; `keytar` is only `vsce login`'s credential store) and installs no release younger than a day (`minimumReleaseAge: 1440`). CI runs on Node 22 too.
+
+### What the container keeps from the Mac
+
+VS Code forwards host credentials into a devcontainer, so the container is no boundary for them on its own. These are set in the Mac's VS Code User settings, not in `devcontainer.json`, which code in the container could change:
+
+- `dev.containers.gitCredentialHelperConfigLocation: "none"` and `dev.containers.copyGitConfig: false`. The SSH agent is still forwarded (no setting turns it off), and holds no keys.
+- `.git/hooks` and `.git/config` are mounted read-only (`devcontainer.json`), since git on the Mac runs what they hold and changes there don't show in `git status`. One effect: `git branch -d` deletes the branch but exits 1, as it can't drop the branch's config section. `.devcontainer/` and `.vscode/` stay writable, since they're tracked: check `git status` before a rebuild.
+
+Pushing and pulling work from VS Code's git UI in the container: its askpass hands git the Mac's GitHub login, whatever the settings above say. Force pushes and other pushes from a shell run in a terminal on the Mac. Branches and commits go through the agent, not the git UI: the agent's git runs the hooks inside the Bash sandbox, the git UI runs them outside it, where any process can ask the askpass socket for the login.
+
+### Claude Code's Bash sandbox
+
+Every Bash command the agent runs is sandboxed with bubblewrap: it writes only to the repo and `$TMPDIR`, and can't change the Claude Code settings, skills and hooks or `.git/hooks` and `.git/config`. Without `bubblewrap` and `socat` in the image, Claude Code would run commands unsandboxed without an error.
+
+- `runArgs: --security-opt seccomp=unconfined` in `devcontainer.json`, because Docker's default seccomp profile blocks the user namespaces bubblewrap needs. `sandbox.enableWeakerNestedSandbox: true` in the container's `/home/node/.claude/settings.json`, because an unprivileged container can't mount a fresh `/proc`; it reuses the container's, which is acceptable as the container is the outer boundary. It's set by hand, so it never applies on the Mac and the agent doesn't write its own sandbox settings.
+- Electron can't create user namespaces inside the sandbox, so the integration tests run outside it: `.claude/settings.json` lists `pnpm run build:extension` and `xvfb-run -a pnpm run test:integration` in `sandbox.excludedCommands`. Claude Code drops a leading `env -u …` before matching but matches `xvfb-run` as written. A call with a `cd`, a redirect or another command stays sandboxed, so the agent runs the e2e command as one bare call ([Testing](../CLAUDE.md#testing)). Excluded commands still need a permission.
+- pnpm 12 keeps its lock folders in `$XDG_RUNTIME_DIR`, falling back to `/tmp`, which is read-only in the sandbox. `post-checkout` sets it to `$TMPDIR` when unset; a `pnpm install` the agent runs by hand in a fresh worktree needs the same.
+- To block a path that doesn't exist (`.bashrc`, `.mcp.json`, `.claude/agents` and others in the repo root), the sandbox creates an empty placeholder file and mounts `/dev/null` over it. The placeholders exist while a sandboxed command runs: inside the sandbox `git status` lists them as untracked character devices, which `/branch` and `/merge` ignore; outside it, in VS Code's git view, they're empty files, so don't stage everything while a background command runs.
 
 ## Checks
 
