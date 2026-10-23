@@ -1,0 +1,10 @@
+# Dependencies allowed to run install scripts; pnpm blocks all others.
+# keytar is only used by `vsce login`'s credential store (CI uses env PATs),
+# and @vscode/vsce-sign isn't needed for `vsce package`.
+allowBuilds:
+  '@vscode/vsce-sign': false
+  esbuild: true
+  keytar: false
+
+# Don't install versions published less than a day ago (in minutes).
+minimumReleaseAge: 1440

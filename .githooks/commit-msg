@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# Checks the subject line against the commit convention in docs/git-workflow.md
+# ("Commit messages"). The container's system git config enables it with
+# core.hooksPath=.githooks (see "Devcontainer" in docs/development.md).
+set -euo pipefail
+
+subject=$(grep -v '^#' "$1" | grep -m1 -v '^[[:space:]]*$' || true)
+# The line after the subject. Git takes the whole first paragraph as the
+# subject, so a body without a blank line above it shows up in
+# `git log --oneline`; merge messages written to a file are the usual case.
+after_subject=$(grep -v '^#' "$1" | grep -A1 -m1 -v '^[[:space:]]*$' | sed -n 2p || true)
+
+if [[ -n ${after_subject//[[:space:]]/} ]]; then
+  cat >&2 <<EOF
+Commit message has no blank line after the subject:
+
+  $subject
+  $after_subject
+
+Put a blank line between the subject and the body.
+EOF
+  exit 1
+fi
+
+# Messages git writes itself. Merge commits aren't among them: their subject
+# is the line the first-parent history shows for the whole branch.
+if [[ $subject =~ ^(Revert \"|fixup! |squash! |amend! ) ]]; then
+  exit 0
+fi
+
+types='feat|fix|docs|test|refactor|perf|build|ci|chore|revert'
+if [[ $subject =~ ^($types)(\([a-z0-9-]+\))?!?:\ [^A-Z[:space:]] ]]; then
+  exit 0
+fi
+
+cat >&2 <<EOF
+Commit subject doesn't follow the convention:
+
+  $subject
+
+Expected: <type>[(scope)][!]: <lowercase description>
+Types:    ${types//|/, }
+Example:  feat(settings): show the default value in the hint
+
+See "Commit messages" in docs/git-workflow.md.
+EOF
+exit 1

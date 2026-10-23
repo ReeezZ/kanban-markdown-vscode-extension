@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# After `git worktree add` under .claude/worktrees/: install the dependencies
+# in the new worktree, so the checks and tests run there right away (see
+# "Worktrees for parallel work" in docs/git-workflow.md).
+# Does nothing for ordinary checkouts or other worktrees. Never fails the
+# checkout: a worktree that couldn't be seeded is still usable, just cold.
+#
+# Enabled by the container's system git config, core.hooksPath=.githooks
+# (see "Devcontainer" in docs/development.md).
+set -uo pipefail
+
+prev=$1
+flag=$3
+# git passes the null sha as the previous HEAD for a freshly added worktree.
+[[ "$flag" == 1 && "$prev" =~ ^0+$ ]] || exit 0
+
+worktree=$(git rev-parse --show-toplevel)
+main=$(git worktree list --porcelain | sed -n '1s/^worktree //p')
+[[ "$worktree" == "$main"/.claude/worktrees/* ]] || exit 0
+
+step() { echo "post-checkout: $*" >&2; }
+
+# pnpm 12 keeps its lock folders in $XDG_RUNTIME_DIR, falling back to /tmp,
+# which is read-only in Claude Code's Bash sandbox. $TMPDIR is writable there.
+export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-${TMPDIR:-/tmp}}"
+
+step "pnpm install --frozen-lockfile --prefer-offline"
+(cd "$worktree" && pnpm install --frozen-lockfile --prefer-offline >&2) ||
+  step "install failed; run it by hand"
+
+exit 0

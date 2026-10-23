@@ -9,3 +9,16 @@ tsconfig.json
 vite.config.ts
 eslint.config.mjs
 README.md
+.claude/**
+.devcontainer/**
+.githooks/**
+backlog/**
+**/CLAUDE.md
+docs/*.md
+docs/specs/**
+docs/areas/**
+scripts/*.py
+scripts/README.md
+**/__pycache__/**
+.pnpm-store/**
+pnpm-workspace.yaml
