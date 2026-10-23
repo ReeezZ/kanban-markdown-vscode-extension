@@ -96,7 +96,7 @@ sequenceDiagram
 ```
 
 - The message carries an insert index, not a key, despite the field name `newOrder`. Both sides turn the index into a key the same way: the target column without the moved card, sorted by `order`, then `generateKeyBetween` of the two neighbours at the index. The webview uses its key for the optimistic update; the host's `init` replaces it.
-- The webview computes the index from what the user sees: the drop position in the filtered list (search and filters), mapped to the column by the visible card at that position. In the epic view that column is narrowed to the lane, but both the optimistic update and the host apply the index to the whole column across all lanes. That is the mechanism behind the epic-lane risk under [Risks](../architecture.md#risks).
+- The webview computes the index from what the user sees, mapped onto the column without filters ([Drag and drop](webview.md#drag-and-drop)). In the epic view that index is counted within the lane, but both the optimistic update and the host apply it to the whole column across all lanes. That is the mechanism behind the epic-lane risk under [Risks](../architecture.md#risks).
 - Dropping a card on another epic lane does nothing: each lane is a board of its own with its own drag state, so a drag can't change a card's epic.
 - Only the moved card's file is written. `modified` is set on every move, also a reorder within one column; `completedAt` is set on a move into `done`, cleared on a move out of it, and kept otherwise.
 - A move into or out of `done` renames the file into or out of `done/`, with `-1`, `-2` on a name clash; the `id` stays.

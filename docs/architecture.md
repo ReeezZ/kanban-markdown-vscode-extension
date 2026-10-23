@@ -43,7 +43,7 @@ flowchart LR
 The host and the webview talk through `postMessage`; `src/shared/types.ts` is the contract.
 
 - [Extension](areas/extension.md): loading, moving and writing cards, the messages, file watching.
-- The webview's area doc is still to come (see the card `area-docs-baseline` in [backlog](../backlog/)).
+- [Webview](areas/webview.md): the store, drag and drop, filters, deleting with undo, the card editor and the create dialog.
 
 ## Decisions
 

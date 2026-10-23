@@ -1,13 +1,13 @@
 ---
 id: "area-docs-baseline"
-status: "in-progress"
+status: "done"
 priority: "high"
 assignee: null
 epic: "01 Foundation"
 dueDate: null
 created: "2026-10-23T15:04:03.000Z"
-modified: "2026-10-23T18:00:00.000Z"
-completedAt: null
+modified: "2026-10-23T23:15:00.000Z"
+completedAt: "2026-10-23T23:15:00.000Z"
 labels: ["chore", "workflow"]
 order: "a0"
 ---
@@ -24,10 +24,10 @@ The docs explain what the code can't say on its own: how the parts fit together,
 
 **Done when**
 
-- [ ] both area docs exist, in the style of the doc rules, with the diagrams rendered and checked
-- [ ] each is linked from Building blocks, replacing the "will be linked" sentence there
-- [ ] the text was checked against the code, not against the handoff
-- [ ] `./scripts/docs_check.py --check` passes
+- [x] both area docs exist, in the style of the doc rules, with the diagrams rendered and checked
+- [x] each is linked from Building blocks, replacing the "will be linked" sentence there
+- [x] the text was checked against the code, not against the handoff
+- [x] `./scripts/docs_check.py --check` passes
 
 **Out of scope:** tests and refactoring.
 
