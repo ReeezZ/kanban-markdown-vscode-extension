@@ -32,5 +32,6 @@
     }
   ],
   "kanban-markdown.showBuildWithAI": false,
-  "kanban-markdown.defaultPriority": "low"
+  "kanban-markdown.defaultPriority": "low",
+  "js/ts.tsdk.path": "node_modules/typescript/lib"
 }

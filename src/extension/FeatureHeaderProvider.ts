@@ -13,7 +13,6 @@ export class FeatureHeaderProvider implements vscode.WebviewViewProvider {
 
   private _view?: vscode.WebviewView
   private _currentDocument?: vscode.TextDocument
-  private _disposables: vscode.Disposable[] = []
 
   constructor(private readonly _extensionUri: vscode.Uri) {}
 
