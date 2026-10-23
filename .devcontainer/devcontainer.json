@@ -19,9 +19,7 @@
     // Keeps the Claude Code login and settings across rebuilds.
     "source=claude-config-${devcontainerId},target=/home/node/.claude,type=volume",
     // The host's node_modules holds binaries for the host platform.
-    "source=node-modules-${devcontainerId},target=${containerWorkspaceFolder}/node_modules,type=volume",
-    // The agent workflow template the fork's workflow was copied from.
-    "source=${localEnv:HOME}/git/agentic_template,target=/workspaces/agentic_template,type=bind,readonly"
+    "source=node-modules-${devcontainerId},target=${containerWorkspaceFolder}/node_modules,type=volume"
   ],
   "containerEnv": {
     "CLAUDE_CONFIG_DIR": "/home/node/.claude"
