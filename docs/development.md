@@ -34,7 +34,7 @@ Two git hooks run automatically (see [Git workflow](#git-workflow)). `commit-msg
 - **l10n**, when `l10n/` or `package.nls*.json` is staged: `pnpm check-l10n`.
 
 - With a base (`.githooks/pre-commit main`, as the merge steps run it) the hook picks the areas from what the branch changed since the base, and the app check also runs `pnpm build`.
-- The integration tests stay out of the hook as too slow for every commit. Run them with `pnpm run build:extension && xvfb-run -a pnpm run test:integration`: they need the extension built first, and a display. They are described in [README › Testing](../README.md#testing).
+- The integration tests stay out of the hook as too slow for every commit. Run them with `pnpm run build:extension && xvfb-run -a pnpm run test:integration`: they need the extension built first, and a display: `xvfb-run -a` starts a throwaway virtual display (Xvfb) on a free display number, as CI does. An agent adds `env -u ELECTRON_RUN_AS_NODE`, see [Testing](../CLAUDE.md#testing). They are described in [README › Testing](../README.md#testing).
 - The checks read the working tree, so they see unstaged edits too. To check exactly what's staged, stash the rest first (`git stash --keep-index`).
 - There is no Prettier step. Prettier is configured upstream, but the code doesn't follow it, so the hook doesn't check it.
 - What `docs_check.py` checks, and what `--fix` writes, is in [scripts/README.md](../scripts/README.md).

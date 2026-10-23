@@ -46,7 +46,7 @@ In the container:
    - `/sandbox` shows no Dependencies tab, and a sandboxed `ls` runs without a `bwrap` error.
    - `git status` is clean after `pnpm install --frozen-lockfile`.
 2. **App checks:** `pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm check-l10n`.
-3. **Integration tests:** `pnpm run build:extension && xvfb-run -a pnpm run test:integration`.
+3. **Integration tests:** `pnpm run build:extension && xvfb-run -a pnpm run test:integration` in a terminal; an agent runs it with `env -u ELECTRON_RUN_AS_NODE` before `xvfb-run`.
 4. **Docs check:** `./scripts/docs_check.py --check` exits 0, and `python3 -m unittest discover -s scripts -t .` passes.
 5. **commit-msg**, tried by hand with message files in `$TMPDIR`.
    - Rejected: `Bad subject`, `Merge branch 'x'`.
@@ -84,6 +84,7 @@ In the container:
 - **Claude Code's Bash sandbox in the container.** On Linux it needs `bubblewrap` and `socat`; if they're missing, Claude Code runs commands unsandboxed without an error ([Sandboxing › Set up Linux and WSL2](https://code.claude.com/docs/en/sandboxing#set-up-linux-and-wsl2)).
   - In an unprivileged container, bubblewrap can't mount a fresh `/proc`. `sandbox.enableWeakerNestedSandbox: true` reuses the container's `/proc`, which is acceptable because the container is the outer boundary ([Bubblewrap fails to start inside a container](https://code.claude.com/docs/en/sandboxing#bubblewrap-fails-to-start-inside-a-container)). It goes in the container's user settings (`/home/node/.claude/settings.json`), so it never applies on the host. The user sets it by hand: the auto-mode classifier blocks Claude from writing its own sandbox settings.
   - Electron can't create user namespaces inside the sandbox (`No usable sandbox!`), so the e2e command is listed in `sandbox.excludedCommands` in the project's `.claude/settings.json` ([Chromium or rootless Podman fails inside the sandbox](https://code.claude.com/docs/en/sandboxing#chromium-or-rootless-podman-fails-inside-the-sandbox-on-linux)). That leaves upstream's test runner unchanged.
+- **The agent unsets `ELECTRON_RUN_AS_NODE` for the integration tests** (found in step 8). In the Claude Code IDE extension, commands inherit the extension host's `ELECTRON_RUN_AS_NODE=1`, so the VS Code that `@vscode/test-electron` launches starts as plain Node and fails with `Cannot find module …/fixtures/workspace`. The agent's command adds `env -u ELECTRON_RUN_AS_NODE`; a terminal and CI don't set the variable. `runTests.ts` stays unchanged, since only processes started from an extension host are affected.
 - **The full template.** Specs and the fold, area docs, breadcrumbs, `Superseded-by` and all eight skills, so the fork works spec-driven like the template's origin project. The docs are thin so far; `area-docs-baseline` is the first Phase 1 card.
 - **Upstream's conventions win.**
   - The README is the Marketplace page, and it and CONTRIBUTING get no fork workflow. The template's root README sections go into `docs/development.md` instead.
@@ -187,7 +188,7 @@ Copy from `/workspaces/agentic_template`, keeping all of it: specs, area docs, b
   - `src/shared/types.ts` is the host↔webview contract, so change both sides in one commit.
   - `src/extension` and `src/shared` use relative imports only and no DOM, because `tsconfig.integration.json` compiles them without the `@/` alias.
   - New UI strings need en/es/pt entries in `l10n/` or `package.nls*.json`, checked with `pnpm check-l10n`.
-- Testing: the e2e command is `pnpm run build:extension && xvfb-run -a pnpm run test:integration`. It covers `src/extension/`, `src/shared/` and `tests/integration/`, and is described in [README › Testing](../../README.md#testing).
+- Testing: the e2e command is `pnpm run build:extension && env -u ELECTRON_RUN_AS_NODE xvfb-run -a pnpm run test:integration`, with why the agent needs `env -u` (see [Decisions](#decisions)). It covers `src/extension/`, `src/shared/` and `tests/integration/`, and is described in [README › Testing](../../README.md#testing).
 - New section `## Fork and upstream`:
   - upstream's conventions win;
   - never reformat upstream code;
@@ -281,7 +282,7 @@ Adapt:
 - `/park`: take the highest `order` key on the whole board, until bug 2 is fixed.
 - `/docs-consistency`: read `docs/development.md` where it reads the root README's workflow sections.
 
-Add to `.claude/settings.json`: `"sandbox": { "excludedCommands": ["pnpm run build:extension", "xvfb-run -a pnpm run test:integration"] }`. Every command in a call has to match an entry, so the e2e call is these two commands exactly.
+Add to `.claude/settings.json`: `"sandbox": { "excludedCommands": ["pnpm run build:extension", "env -u ELECTRON_RUN_AS_NODE xvfb-run -a pnpm run test:integration"] }`. Every command in a call has to match an entry, so the e2e call is these two commands exactly.
 
 Then `chmod +x .claude/hooks/*.sh`.
 

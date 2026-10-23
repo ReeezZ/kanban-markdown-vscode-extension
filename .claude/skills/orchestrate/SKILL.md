@@ -26,5 +26,5 @@ Carry out `$ARGUMENTS` (default: the plan approved in this session) as orchestra
 ## 3. End of the run
 
 - If the work has a card, the last step's commit finishes it as "Finished" in the [Backlog section of `docs/CLAUDE.md`](../../../docs/CLAUDE.md#backlog) describes, unless the branch is a slice that isn't the card's last.
-- If the branch touches `src/extension/`, `src/shared/` or `tests/integration/`, start the e2e suite as [Testing](../../../CLAUDE.md#testing) in `CLAUDE.md` describes: `pnpm run build:extension && xvfb-run -a pnpm run test:integration`, as that one call so the sandbox exclusion in `.claude/settings.json` matches.
+- If the branch touches `src/extension/`, `src/shared/` or `tests/integration/`, start the e2e suite as [Testing](../../../CLAUDE.md#testing) in `CLAUDE.md` describes: `pnpm run build:extension && env -u ELECTRON_RUN_AS_NODE xvfb-run -a pnpm run test:integration`, as that one call so the sandbox exclusion in `.claude/settings.json` matches.
 - One summary: each step with its commit, what you fixed yourself or had redone and why, the check and e2e results, and anything left open or deferred. Then say whether it's a good point to `/clear`, as CLAUDE.md asks. Merging goes through `/merge` once the user says so.

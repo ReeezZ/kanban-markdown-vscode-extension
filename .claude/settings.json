@@ -20,7 +20,7 @@
   "sandbox": {
     "excludedCommands": [
       "pnpm run build:extension",
-      "xvfb-run -a pnpm run test:integration"
+      "env -u ELECTRON_RUN_AS_NODE xvfb-run -a pnpm run test:integration"
     ]
   },
   "hooks": {
