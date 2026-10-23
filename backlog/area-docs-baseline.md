@@ -1,36 +1,36 @@
 ---
 id: "area-docs-baseline"
-status: "backlog"
+status: "ready"
 priority: "high"
 assignee: null
 epic: "01 Ordering Fixes"
 dueDate: null
 created: "2026-10-23T15:04:03.000Z"
-modified: "2026-10-23T15:04:03.000Z"
+modified: "2026-10-23T16:00:00.000Z"
 completedAt: null
 labels: ["chore", "workflow"]
 order: "a0"
 ---
 # Area docs baseline
 
-**Goal:** a developer or agent can read how the extension and the webview work today, before touching the ordering code, instead of reverse-engineering `KanbanPanel.ts`.
+**Goal:** a developer or agent can read how the extension and the webview work today, at the level of concepts, flows and edge rules, before touching the ordering code, instead of reverse-engineering `KanbanPanel.ts`.
 
 Write two area docs and link them from [Building blocks](../docs/architecture.md#building-blocks):
 
-- `docs/areas/extension.md`: the message switch, move and order, file watching, the card format.
+- `docs/areas/extension.md`: the host: the message switch, move and order, file watching (including how it tells its own writes from external ones), the sidebar view and the header provider.
 - `docs/areas/webview.md`: the store, drag and drop, the editor.
 
-They are also the fold target for the Phase 1 specs, so each Phase 1 spec folds into a doc that already exists.
+The docs explain what the code can't say on its own: how the parts fit together, why, and the edge rules. Diagrams where they replace text (for example the drag, write, watch and refresh loop, and the host and webview messages). No code listings. The card format stays in the architecture Decisions, which the extension doc links to.
 
 **Done when**
 
-- [ ] both area docs exist, in the style of the doc rules (concepts, flows, edge rules, a few decisions; no code listings)
+- [ ] both area docs exist, in the style of the doc rules, with the diagrams rendered and checked
 - [ ] each is linked from Building blocks, replacing the "will be linked" sentence there
 - [ ] the text was checked against the code, not against the handoff
 - [ ] `./scripts/docs_check.py --check` passes
 
-**Open questions**
+**Out of scope:** tests and refactoring.
 
-- Is "file watching" part of the extension doc or its own area?
+No spec: this is docs only, so it can be built directly. It is a lot of code to read (`KanbanPanel.ts` is about 1200 lines, the webview about 3000); if it overruns, the extension doc goes first, since the ordering fixes need it.
 
 **Needs:** none
