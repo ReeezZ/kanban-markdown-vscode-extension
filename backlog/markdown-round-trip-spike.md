@@ -22,6 +22,8 @@ Options to try:
 - TipTap's official Markdown extension.
 - Keep the body unchanged when it wasn't edited.
 
+If [`editor-direction-spike`](editor-direction-spike.md) moves the body to VS Code's own editor, the round trip no longer matters for the body.
+
 The spike also covers the general "the editor feels immature" complaint: collect concrete items and turn each into a card.
 
 **Done when**
