@@ -7,6 +7,7 @@ import type { Feature, FeatureStatus, Priority, KanbanColumn, FeatureFrontmatter
 import { ensureStatusSubfolders, moveFeatureFile, getFeatureFilePath, getStatusFromPath, fileExists } from './featureFileUtils'
 import { parseFeatureFile, serializeFeature } from '../shared/featureFrontmatter'
 import { featureMatchesEpicLane } from '../shared/epicLane'
+import { computeMoveOrder } from '../shared/order'
 import { t, getBundle, getEffectiveLocale, reloadBundle, getAllDefaultColumnNames, getDefaultColumnNamesForLocale } from './l10n'
 
 function normalizeEpic(value: string | null | undefined): string | null {
@@ -614,16 +615,7 @@ export class KanbanPanel {
       feature.completedAt = newStatus === 'done' ? new Date().toISOString() : null
     }
 
-    // Get sorted features in the target column (excluding the moved feature)
-    const targetColumnFeatures = this._features
-      .filter(f => f.status === newStatus && f.id !== featureId)
-      .sort((a, b) => (a.order < b.order ? -1 : a.order > b.order ? 1 : 0))
-
-    // Compute fractional index between neighbors at the target position
-    const clampedOrder = Math.max(0, Math.min(newOrder, targetColumnFeatures.length))
-    const before = clampedOrder > 0 ? targetColumnFeatures[clampedOrder - 1].order : null
-    const after = clampedOrder < targetColumnFeatures.length ? targetColumnFeatures[clampedOrder].order : null
-    feature.order = generateKeyBetween(before, after)
+    feature.order = computeMoveOrder(this._features, featureId, newStatus, newOrder)
 
     // Only the moved feature needs to be written
     const content = this._serializeFeature(feature)

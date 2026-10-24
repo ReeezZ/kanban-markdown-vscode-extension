@@ -2,6 +2,7 @@
   "recommendations": [
     "dbaeumer.vscode-eslint",
     "LachyFS.kanban-markdown",
-    "constellationgraph.constellationgraph"
+    "constellationgraph.constellationgraph",
+    "vitest.explorer"
   ]
 }

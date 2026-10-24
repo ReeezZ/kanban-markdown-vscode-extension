@@ -1,13 +1,13 @@
 ---
 id: "baseline-tests"
-status: "ready"
+status: "done"
 priority: "high"
 assignee: null
 epic: "01 Foundation"
 dueDate: null
 created: "2026-10-23T16:30:00.000Z"
-modified: "2026-10-23T23:45:00.000Z"
-completedAt: null
+modified: "2026-10-24T19:10:06.000Z"
+completedAt: "2026-10-24T19:10:06.000Z"
 labels: ["chore", "extension"]
 order: "a0l"
 ---
@@ -28,15 +28,17 @@ Order: the panel tests first, against today's code, then the extraction with the
 
 Spec first (0002): what is pinned, where the pure function lives, whether the drop-index mapping is extracted too, and the fake's shape.
 
+Spec: `docs/specs/0002-baseline-tests.md`
+
 **Done when**
 
-- [ ] the spec says what is pinned and through which seam
-- [ ] `moveFeature` through the panel is covered: a reorder within a column, a status change, a move into and out of `done` (the file moves, `completedAt` set or cleared, `modified` set), only the moved card's file written
-- [ ] the key computation is one pure function used by the host and the webview, with unit tests
-- [ ] the watcher is covered for a move: events dropped while `_migrating` is set, the 100 ms debounce before the reload, the open card reloaded in the editor when it differs from its last save
-- [ ] the webview's drop-index mapping is covered: filtered list to column index, a downward move in the same column, a drop on its own position does nothing
-- [ ] the tests run in `pnpm test`, and `KanbanPanel.ts` is no longer excluded from coverage in `vitest.config.mts`
+- [x] the spec says what is pinned and through which seam
+- [x] `moveFeature` through the panel is covered: a reorder within a column, a status change, a move into and out of `done` (the file moves, `completedAt` set or cleared, `modified` set), only the moved card's file written
+- [x] the key computation is one pure function used by the host and the webview, with unit tests
+- [x] the watcher is covered for a move: events dropped while `_migrating` is set, the 100 ms debounce before the reload, the open card reloaded in the editor when it differs from its last save
+- [x] the webview's drop-index mapping is covered: filtered list to column index, a downward move in the same column, a drop on its own position does nothing
+- [x] the tests run in `pnpm test`, and `KanbanPanel.ts` is no longer excluded from coverage in `vitest.config.mts`
 
-**Out of scope:** the known bugs, a drop in an epic lane and equal keys: they stay unpinned, so a refactor could change them unnoticed, and [`epic-lane-drop-order`](epic-lane-drop-order.md) and [`equal-order-keys`](equal-order-keys.md) bring their tests with the fix. Other messages, move all, archive, loading and its migrations, labels and the sidebar are in the test gaps of [`code-review-passes`](code-review-passes.md).
+**Out of scope:** the known bugs, a drop in an epic lane and equal keys: they stay unpinned, so a refactor could change them unnoticed, and [`epic-lane-drop-order`](../epic-lane-drop-order.md) and [`equal-order-keys`](../equal-order-keys.md) bring their tests with the fix. Other messages, move all, archive, loading and its migrations, labels and the sidebar are in the test gaps of [`code-review-passes`](../code-review-passes.md).
 
 **Needs:** none

@@ -17,7 +17,7 @@ order: "a0s"
 
 One pass per area, after the area docs and the baseline tests exist. A finding is a card (correctness, structure, tests), not a fix made on the spot. The ones that should come before the Phase 2 fixes go into `01 Foundation`; the rest into a later epic.
 
-The three reading passes are done (host and webview while writing their area docs, `src/shared` on its own); what's left is sorting the findings below into cards, after [`baseline-tests`](baseline-tests.md).
+The three reading passes are done (host and webview while writing their area docs, `src/shared` on its own); what's left is sorting the findings below into cards, after [`baseline-tests`](done/baseline-tests.md).
 
 **Done when**
 
@@ -33,9 +33,10 @@ The lenses used per pass: correctness, structure and duplication, the contract, 
 **Findings from the extension docs pass** (raw input for the host pass, unsorted into cards; from reading, not running):
 
 - Move: `generateKeyBetween` throws after `_moveFeature` has changed the card in memory, so memory and file differ; in the webview the throw drops the move silently. No `writeFile` in the move paths is caught.
-- Move: the field `newOrder` is an index, not a key; the key is computed twice (webview and host) from possibly different card lists.
+- Move: the field `newOrder` is an index, not a key; the key is computed twice (webview and host) from possibly different card lists. Since [`baseline-tests`](done/baseline-tests.md) both call one function, `computeMoveOrder`, but still on their own card lists.
 - Contract: the host's message handler is untyped; `focusMenuBar` and `startWithAI` are missing from `WebviewMessage`; `featuresUpdated` is never sent.
-- Watcher: `_migrating` drops events instead of deferring them; plain writes aren't guarded, so each causes a second full load; `_lastWrittenContent` only knows editor saves, so a drag on the open card reloads the editor (check whether unsaved editor text is lost).
+- Watcher: `_migrating` drops events instead of deferring them; plain writes aren't guarded, so each causes a second full load; `_lastWrittenContent` only knows editor saves, so a drag on the open card reloads the editor (check whether unsaved editor text is lost). VS Code delivers watcher events asynchronously, probably after `_migrating` is reset, so the guard may drop nothing in practice; [`fake-vscode-contract-tests`](fake-vscode-contract-tests.md) would tell.
+- Testability: `KanbanPanel` calls `vscode.workspace.fs` and the watcher directly, so its tests need the whole fake `vscode` module. Injecting the fs and the watcher, as `featureFileUtils` does with `FsAdapter`, would shrink the fake to those interfaces; an option for the refactors.
 - Load: migrations (old status folders, done reconcile, integer orders) run on every load, including watcher reloads; the order migration rewrites every card of the column; any error empties the board silently; a file without frontmatter vanishes silently.
 - Duplication: three frontmatter parsers (shared, sidebar, `FeatureHeaderProvider`), two serializers, two card loaders, the default columns three times with `DEFAULT_COLUMNS` unused, the features directory resolved in four places, the sort comparator about seven times, the done-folder move block four times.
 - Dead code: `FeatureHeaderProvider.ts` and `src/shared/editorTypes.ts` are never registered or built.
@@ -45,7 +46,7 @@ The lenses used per pass: correctness, structure and duplication, the contract, 
 - Sidebar: re-opens the board each time it becomes visible; waits a fixed 500 ms for the board; its watcher and config listener are never disposed.
 - Frontmatter: no escaping of `"`, labels with commas split on reading, missing `created`/`modified` read as "now" on every load (feeds into filename migration).
 - English-only strings outside `l10n/`: the filename-migration message, the AI prompt, `<html lang="en">`, the hardcoded default columns.
-- Test gaps: nothing covers `_moveFeature`, `_moveAllCards`, `_archiveAllCards`, `_loadFeatures` and its migrations, the watcher, label operations, the sidebar, or the webview's drop-index mapping.
+- Test gaps: nothing covers `_moveAllCards`, `_archiveAllCards`, `_loadFeatures` and its migrations, label operations or the sidebar. `_moveFeature`, the watcher and the webview's drop-index mapping are covered since [`baseline-tests`](done/baseline-tests.md).
 
 **Findings from the webview docs pass** (raw input for the webview pass, unsorted into cards; from reading, not running; already covered by a card: the lane index in [`epic-lane-drop-order`](epic-lane-drop-order.md), the hard-coded status list in [`status-options-from-columns`](status-options-from-columns.md), the throw on equal keys in [`equal-order-keys`](equal-order-keys.md), the body re-serialisation in [`markdown-round-trip-spike`](markdown-round-trip-spike.md)):
 
@@ -75,4 +76,4 @@ The lenses used per pass: correctness, structure and duplication, the contract, 
 - Contract: `moveFeature.newStatus` is `string` while every other status is `FeatureStatus`, so the host casts it unchecked (`KanbanPanel.ts:611`).
 - Test gaps: `epicLaneId` has no test; the parser tests don't cover an empty value, a quote inside a value or a label with a comma; nothing checks that parsing then serializing a file gives back the same file, which [`serializer-keeps-card-files`](serializer-keeps-card-files.md) will need.
 
-**Needs:** [`baseline-tests`](baseline-tests.md), [`area-docs-baseline`](done/area-docs-baseline.md)
+**Needs:** [`baseline-tests`](done/baseline-tests.md), [`area-docs-baseline`](done/area-docs-baseline.md)

@@ -11,7 +11,8 @@
         "esbenp.prettier-vscode",
         "anthropic.claude-code",
         "LachyFS.kanban-markdown",
-        "ConstellationGraph.ConstellationGraph"
+        "ConstellationGraph.ConstellationGraph",
+        "vitest.explorer"
       ]
     }
   },

@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, within, fireEvent } from '@testing-library/react'
+import { render, screen, within, fireEvent, createEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { KanbanBoard } from '../../../src/webview/components/KanbanBoard'
 import { useStore } from '../../../src/webview/store'
@@ -341,5 +341,103 @@ describe('KanbanBoard — layout', () => {
     setup()
     const wrapper = screen.getByText('Backlog').closest('[class*="overflow-y-auto"]')
     expect(wrapper).toBeInTheDocument()
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Drag and drop — drop index sent to onMoveFeature
+// ---------------------------------------------------------------------------
+
+describe('KanbanBoard — drop index', () => {
+  // To Do in key order: A, B, C, D, E. The priority filter hides B and D,
+  // so the column shows A, C, E. X waits in Backlog.
+  function setupBoard() {
+    useStore.setState({
+      columns: DEFAULT_COLUMNS,
+      priorityFilter: 'high',
+      features: [
+        makeFeature({ id: 'A', status: 'todo', order: 'a0', priority: 'high', content: '# Card A' }),
+        makeFeature({ id: 'B', status: 'todo', order: 'a1', priority: 'low',  content: '# Card B' }),
+        makeFeature({ id: 'C', status: 'todo', order: 'a2', priority: 'high', content: '# Card C' }),
+        makeFeature({ id: 'D', status: 'todo', order: 'a3', priority: 'low',  content: '# Card D' }),
+        makeFeature({ id: 'E', status: 'todo', order: 'a4', priority: 'high', content: '# Card E' }),
+        makeFeature({ id: 'X', status: 'backlog', order: 'a5', priority: 'high', content: '# Card X' })
+      ]
+    })
+    return setup()
+  }
+
+  function card(title: string): HTMLElement {
+    const el = screen.getByText(title).closest('[draggable="true"]') as HTMLElement | null
+    if (!el) throw new Error(`no draggable card for ${title}`)
+    // jsdom has no layout: give every card a 100px box, so clientY picks its upper or lower half
+    el.getBoundingClientRect = () => ({ top: 0, bottom: 100, height: 100, left: 0, right: 0, width: 0, x: 0, y: 0, toJSON: () => ({}) })
+    return el
+  }
+
+  function todoColumn(): HTMLElement {
+    return screen.getByText('To Do').closest('[class*="rounded-lg"]') as HTMLElement
+  }
+
+  const dataTransfer = { setData: () => {}, effectAllowed: '', dropEffect: '' }
+
+  function dragStart(title: string): void {
+    fireEvent.dragStart(card(title), { dataTransfer })
+  }
+
+  function dragOver(title: string, half: 'upper' | 'lower'): void {
+    const el = card(title)
+    // jsdom has no DragEvent, so clientY from the init dict would be dropped
+    const event = createEvent.dragOver(el, { dataTransfer })
+    Object.defineProperty(event, 'clientY', { value: half === 'upper' ? 10 : 90 })
+    fireEvent(el, event)
+  }
+
+  function drop(target: HTMLElement): void {
+    fireEvent.drop(target, { dataTransfer })
+  }
+
+  it('maps a drop before a visible card to that card\'s position in the full column', () => {
+    const { onMoveFeature } = setupBoard()
+    dragStart('Card X')
+    dragOver('Card C', 'upper')
+    drop(card('Card C'))
+    // C is at index 2 of A, B, C, D, E
+    expect(onMoveFeature).toHaveBeenCalledWith('X', 'todo', 2)
+  })
+
+  it('places a drop after the last visible card right after it', () => {
+    const { onMoveFeature } = setupBoard()
+    dragStart('Card X')
+    dragOver('Card E', 'lower')
+    drop(card('Card E'))
+    expect(onMoveFeature).toHaveBeenCalledWith('X', 'todo', 5)
+  })
+
+  it('appends a drop on empty column space after the last visible card', () => {
+    const { onMoveFeature } = setupBoard()
+    dragStart('Card X')
+    drop(todoColumn())
+    expect(onMoveFeature).toHaveBeenCalledWith('X', 'todo', 5)
+  })
+
+  it('corrects the index for a downward move in the same column', () => {
+    const { onMoveFeature } = setupBoard()
+    dragStart('Card A')
+    dragOver('Card C', 'lower')
+    drop(card('Card C'))
+    // shown: A, C, E → A lands before E; without A the column is B, C, D, E, so E is at 3
+    expect(onMoveFeature).toHaveBeenCalledWith('A', 'todo', 3)
+  })
+
+  it('sends nothing for a drop on the card\'s own position', () => {
+    const { onMoveFeature } = setupBoard()
+    dragStart('Card C')
+    dragOver('Card C', 'upper')
+    drop(card('Card C'))
+    dragStart('Card C')
+    dragOver('Card C', 'lower')
+    drop(card('Card C'))
+    expect(onMoveFeature).not.toHaveBeenCalled()
   })
 })
