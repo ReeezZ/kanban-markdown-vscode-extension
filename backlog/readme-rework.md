@@ -1,12 +1,12 @@
 ---
 id: "readme-rework"
-status: "ready"
+status: "in-progress"
 priority: "high"
 assignee: null
 epic: "01 Foundation"
 dueDate: null
 created: "2026-10-23T16:30:00.000Z"
-modified: "2026-10-23T20:00:00.000Z"
+modified: "2026-10-24T12:00:00.000Z"
 completedAt: null
 labels: ["chore", "infra"]
 order: "a0V"
