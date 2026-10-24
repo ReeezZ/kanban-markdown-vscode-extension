@@ -28,6 +28,8 @@ Order: the panel tests first, against today's code, then the extraction with the
 
 Spec first (0002): what is pinned, where the pure function lives, whether the drop-index mapping is extracted too, and the fake's shape.
 
+Spec: `docs/specs/0002-baseline-tests.md`
+
 **Done when**
 
 - [ ] the spec says what is pinned and through which seam
