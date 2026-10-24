@@ -17,4 +17,6 @@ Opening card B within 800 ms of an edit to card A writes B's body into A's file,
 
 Reproduced manually on 2026-10-24 by the user
 
-Same code path, still open: every `featureContent` replaces unsaved edits without a check, and a stale field timer can then revert a drag's status. The fix probably covers all three, so how is open. See [Card editor in the webview doc](../docs/areas/webview.md#card-editor).
+Same code path, still open: every `featureContent` replaces unsaved edits without a check, and a stale field timer can then revert a drag's status. The fix probably covers all three, so how is open.
+
+Found while pinning moves in [`baseline-tests`](baseline-tests.md): `_lastWrittenContent` only knows editor saves, so dragging the open card makes the watcher send `featureContent`, which then replaces unsaved edits; after a drag across the `done` boundary the watcher event carries the old path, so the open card isn't refreshed at all. See [Card editor in the webview doc](../docs/areas/webview.md#card-editor).
