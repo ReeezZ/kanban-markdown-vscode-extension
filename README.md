@@ -1,18 +1,13 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/LachyFS/kanban-markdown-vscode-extension/main/resources/icon.png" alt="Kanban Markdown" width="60" />
+<img src="https://raw.githubusercontent.com/ReeezZ/kanban-markdown-vscode-extension/main/resources/icon.png" alt="Markan" width="60" />
 
-# Kanban Markdown
+# Markan
 
 *"Now your backlog can have merge conflicts too."*
 
-**An agent native kanban board for VS Code, backed by markdown files.**
+**An agent native Kanban board for VS Code, backed by markdown files.**
 
-[![VS Marketplace](https://img.shields.io/visual-studio-marketplace/v/LachyFS.kanban-markdown?label=VS%20Marketplace&logo=visualstudiocode)](https://marketplace.visualstudio.com/items?itemName=LachyFS.kanban-markdown)
-[![Open VSX](https://img.shields.io/open-vsx/v/LachyFS/kanban-markdown?label=Open%20VSX&logo=vscodium)](https://open-vsx.org/extension/LachyFS/kanban-markdown)
-[![Open VSX Downloads](https://img.shields.io/open-vsx/dt/LachyFS/kanban-markdown?label=Downloads&logo=vscodium)](https://open-vsx.org/extension/LachyFS/kanban-markdown)
-[![GitHub Stars](https://img.shields.io/github/stars/LachyFS/kanban-markdown-vscode-extension?style=flat&logo=github)](https://github.com/LachyFS/kanban-markdown-vscode-extension)
-[![CI](https://img.shields.io/github/actions/workflow/status/LachyFS/kanban-markdown-vscode-extension/ci.yml?label=CI&logo=github)](https://github.com/LachyFS/kanban-markdown-vscode-extension/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 [![Claude Code](https://img.shields.io/badge/Claude_Code-supported-f97316?logo=anthropic&logoColor=white)](https://docs.anthropic.com/en/docs/claude-code)
@@ -21,17 +16,21 @@
 [![OpenCode](https://img.shields.io/badge/OpenCode-supported-64748b)](https://github.com/opencode-ai/opencode)
 [![skills.sh](https://img.shields.io/badge/skills.sh-compatible-a855f7)](https://skills.sh)
 
-<img src="https://raw.githubusercontent.com/LachyFS/kanban-markdown-vscode-extension/main/docs/images/editor-view.png" alt="Editor View" width="800" />
+<img src="https://raw.githubusercontent.com/ReeezZ/kanban-markdown-vscode-extension/main/docs/images/editor-view.png" alt="Editor View" width="800" />
 
 </div>
 
 ---
 
+## About this fork
+
+Markan is a personal project in progress, forked from [LachyFS/kanban-markdown-vscode-extension](https://github.com/LachyFS/kanban-markdown-vscode-extension), published as [Kanban Markdown](https://marketplace.visualstudio.com/items?itemName=LachyFS.kanban-markdown) on the VS Code Marketplace. The fork starts from upstream's code and file format, and plans to fix card ordering in the epic view, improve card editing and board polish, and later publish under its own name. "Markan" is a provisional name. The plan is in the [roadmap](docs/roadmap.md).
+
 Features are stored as markdown files with YAML frontmatter — version-controllable, diffable, and editable outside the extension. No accounts, no external services.
 
 ## Quick Start
 
-1. **Install** — search "Kanban Markdown" in the Extensions view ([VS Marketplace](https://marketplace.visualstudio.com/items?itemName=LachyFS.kanban-markdown) / [Open VSX](https://open-vsx.org/extension/LachyFS/kanban-markdown))
+1. **Install** — Markan isn't published yet: [build and install the `.vsix`](#installation), or install [upstream's published original](https://marketplace.visualstudio.com/items?itemName=LachyFS.kanban-markdown)
 2. **Open** — run `Open Kanban Board` from the command palette (`Cmd+Shift+P` / `Ctrl+Shift+P`)
 3. **Create** — press `N` to add your first feature card
 
@@ -52,7 +51,7 @@ Features are stored as markdown files with YAML frontmatter — version-controll
 Each card is a markdown file with YAML frontmatter.
 
 <div align="center">
-<img src="https://raw.githubusercontent.com/LachyFS/kanban-markdown-vscode-extension/main/docs/images/board-overview.png" alt="Kanban Board Overview" width="800" />
+<img src="https://raw.githubusercontent.com/ReeezZ/kanban-markdown-vscode-extension/main/docs/images/board-overview.png" alt="Kanban Board Overview" width="800" />
 </div>
 
 - Priority levels — Critical, High, Medium, Low with color-coded badges
@@ -156,77 +155,17 @@ Default columns:
 
 ## Installation
 
-### VS Code Marketplace
+Markan isn't published on a marketplace yet. Until it is, build the `.vsix` and install it:
 
-Install from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=LachyFS.kanban-markdown) or search "Kanban Markdown" in the Extensions view.
-
-### Open VSX (VSCodium, Cursor, etc.)
-
-Install from [Open VSX](https://open-vsx.org/extension/LachyFS/kanban-markdown) or search "Kanban Markdown" in the Extensions view.
-
-### From VSIX
-
-1. Download the `.vsix` from [Releases](https://github.com/LachyFS/kanban-markdown-vscode-extension/releases)
+1. `pnpm install`, then `pnpm package` — writes the `.vsix` to `releases/`
 2. In VS Code: Extensions > `...` > Install from VSIX
-3. Select the downloaded file
+3. Select the file from `releases/`
+
+For the published original, install [Kanban Markdown](https://marketplace.visualstudio.com/items?itemName=LachyFS.kanban-markdown) from the VS Code Marketplace, or from [Open VSX](https://open-vsx.org/extension/LachyFS/kanban-markdown) (VSCodium, Cursor, etc.).
 
 ## Development
 
-### Prerequisites
-
-- Node.js 18+
-- pnpm
-
-### Setup
-
-```bash
-pnpm install       # Install dependencies
-pnpm dev           # Start development (watch mode)
-pnpm build         # Build for production
-pnpm typecheck     # Type checking
-pnpm lint          # Linting
-```
-
-### Testing
-
-```bash
-# Unit + component tests (fast, no VS Code host required)
-pnpm test
-
-# Watch mode
-pnpm test:watch
-
-# Integration tests (launches a real VS Code instance)
-pnpm test:integration
-```
-
-Unit tests cover shared logic, extension utilities, and React components. Integration tests run inside a VS Code host using `@vscode/test-electron` and exercise the real file system and VS Code APIs.
-
-#### Running the CI pipeline locally with `act`
-
-[`act`](https://github.com/nektos/act) runs GitHub Actions workflows locally in Docker.
-
-```bash
-# Install (macOS)
-brew install act
-
-# Run the full CI test job
-act push -j test --container-architecture linux/amd64
-```
-
-The first run downloads a VS Code binary (~160 MB) into `.vscode-test/` which is cached for subsequent runs.
-
-### Debugging
-
-1. Press `F5` in VS Code to launch the Extension Development Host
-2. Open the command palette and run "Open Kanban Board"
-3. Make changes and reload the window (`Cmd+R`) to see updates
-
-### Tech Stack
-
-**Extension**: TypeScript, VS Code API, esbuild | **Webview**: React 18, Vite, Tailwind CSS, Zustand, Tiptap
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+See [docs/development.md](docs/development.md) for setup, checks and workflow, and [CONTRIBUTING.md](CONTRIBUTING.md) for upstream's contributor guide.
 
 ## Contributors
 

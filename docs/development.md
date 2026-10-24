@@ -56,10 +56,16 @@ Two git hooks run automatically (see [Git workflow](#git-workflow)). `commit-msg
 - **l10n**, when `l10n/` or `package.nls*.json` is staged: the script of `pnpm check-l10n`, run as `node --import tsx scripts/check-l10n.ts` (see [Claude Code's Bash sandbox](#claude-codes-bash-sandbox)).
 
 - With a base (`.githooks/pre-commit main`, as the merge steps run it) the hook picks the areas from what the branch changed since the base, and the app check also runs `pnpm build`.
-- The integration tests stay out of the hook as too slow for every commit. Run them with `pnpm run build:extension && xvfb-run -a pnpm run test:integration`: they need the extension built first, and a display: `xvfb-run -a` starts a throwaway virtual display (Xvfb) on a free display number, as CI does. An agent adds `env -u ELECTRON_RUN_AS_NODE`, see [Testing](../CLAUDE.md#testing). They are described in [README › Testing](../README.md#testing).
+- The integration tests stay out of the hook as too slow for every commit. Run them with `pnpm run build:extension && xvfb-run -a pnpm run test:integration`: they need the extension built first, and a display: `xvfb-run -a` starts a throwaway virtual display (Xvfb) on a free display number, as CI does. An agent adds `env -u ELECTRON_RUN_AS_NODE`, see [Testing](../CLAUDE.md#testing). The two suites are described under [Tests](#tests).
 - The checks read the working tree, so they see unstaged edits too. To check exactly what's staged, stash the rest first (`git stash --keep-index`).
 - There is no Prettier step. Prettier is configured upstream, but the code doesn't follow it, so the hook doesn't check it.
 - What `docs_check.py` checks, and what `--fix` writes, is in [scripts/README.md](../scripts/README.md).
+
+### Tests
+
+- **Unit and component tests** (Vitest) cover shared logic, extension utilities and React components, and need no VS Code host. `pnpm test` runs them once, `pnpm test:watch` in watch mode.
+- **Integration tests** (`pnpm test:integration`) launch a real VS Code with `@vscode/test-electron` and exercise the real file system and VS Code APIs. The first run downloads a VS Code binary (about 160 MB) into `.vscode-test/`, which later runs reuse.
+- **CI locally:** [`act`](https://github.com/nektos/act) runs the GitHub Actions workflow in Docker (macOS: `brew install act`). `act push -j test --container-architecture linux/amd64` runs the CI test job.
 
 ## Git workflow
 
