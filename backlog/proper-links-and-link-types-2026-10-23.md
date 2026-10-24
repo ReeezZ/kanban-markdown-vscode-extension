@@ -16,3 +16,5 @@ order: "aK"
 Linking from one issue to another, maybe even showing suggestions. Automatic link repair and edits when moving a card, instead of hacing the docs link fix in the git commit hook.
 
 Also link types like, depends on, relates to, brainstorming on link types needed
+
+Upstream issue #62 asks for dependencies (a card that needs another one done first), with a mock-up.

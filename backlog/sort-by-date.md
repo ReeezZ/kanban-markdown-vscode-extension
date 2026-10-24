@@ -16,3 +16,5 @@ order: "aQ"
 Sort the cards in each column by `created` or `modified` instead of the manual `order`. Both dates are already in every card's frontmatter.
 
 Open: whether the sort is a view mode that leaves `order` alone (and what dragging does while it's on) or a one-off action that rewrites `order`; newest or oldest first; whether the choice is remembered (a setting or `workspaceState`, both risky to change).
+
+Upstream issue #23 asks for a variant: the Done column ordered by `completedAt`, newest first, with the date kept when a card leaves Done and comes back.

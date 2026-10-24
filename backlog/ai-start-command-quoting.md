@@ -18,3 +18,5 @@ order: "aO"
 The Codex branch (`KanbanPanel.ts:944-951`) passes `ask`, `auto`, `full-auto` and `suggest` to `--ask-for-approval`; the current CLI is believed to take `untrusted`, `on-failure`, `on-request` or `never`, with full auto as its own `--full-auto` flag. Check against the Codex docs.
 
 Bypass and full-auto modes stay: choosing one is like passing the flag on the CLI.
+
+Upstream PR #60 (open, unmerged) fixes this: the prompt is passed as terminal shell arguments instead of through `sendText`, and each agent uses its current CLI flags. It closes upstream issue #58 (Windows quoting) and the OpenCode part of #56 (`opencode` needs `--prompt`). Start from that PR.

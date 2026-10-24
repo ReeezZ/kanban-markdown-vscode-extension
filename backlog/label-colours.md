@@ -15,7 +15,7 @@ order: "a8"
 
 **Goal:** I can give a label a colour in the Label Manager, and the board shows it. Upstream issue #74.
 
-**Cause:** labels have no colour. `LabelManager.tsx` only renames and deletes. Epics already have a light and dark colour approach in `src/shared/epicColor.ts`; copy it. Store the choice in a `labelColors` setting and use a hash of the name as the fallback.
+**Cause:** labels have no colour. `LabelManager.tsx` only renames and deletes. Epics already have a light and dark colour approach in `src/shared/epicColor.ts`; copy it. Upstream PR #54 (assignee colours, unmerged) pulls shared helpers (`fnv1aHash32`, `hsl`) out of it for that; reuse the split. Store the choice in a `labelColors` setting and use a hash of the name as the fallback.
 
 The setting is a change to the `contributes.configuration` schema, so propose it before building. The new UI strings need en, es and pt entries.
 
