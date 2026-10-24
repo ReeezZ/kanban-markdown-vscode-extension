@@ -4,7 +4,7 @@
 
 ## Status
 
-Draft
+Approved
 
 - Phase: 01 Foundation
 - Card: baseline-tests
