@@ -50,7 +50,7 @@ If `git worktree remove` fails with "Directory not empty", ask the user to close
 
 ## 5. Retro and wrap-up
 
-The single wrap-up of the merge. Only what went differently than the card, spec or plan expected: where the user corrected course or the work got stuck (a wrong assumption, a failing tool, permission prompts). Leave out what a commit message or a memory already holds, or point at it ("noted in memory"). Nothing went differently: "Retro: nothing to note".
+The single wrap-up of the merge. Only what went differently than the card, spec or plan expected: where the user corrected course or the work got stuck (a wrong assumption, a failing tool, permission prompts). Leave out what a commit message or a memory already holds, or point at it ("noted in memory"), and don't list steps that worked or checks that passed: the summary has those. Nothing went differently: "Retro: nothing to note".
 
 A proposal only when there's a real one: a line in a CLAUDE.md, a skill tweak, or a gap in the Definition of Ready ([Backlog in `docs/CLAUDE.md`](../../../docs/CLAUDE.md#backlog)). Applied only on the user's yes; a bigger one is offered as a `workflow` card through `/park`. A "maybe, if it happens again" goes into the memory instead.
 
