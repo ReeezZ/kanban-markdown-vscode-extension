@@ -24,7 +24,9 @@
 
 ## About this fork
 
-Markan is a personal project in progress, forked from [LachyFS/kanban-markdown-vscode-extension](https://github.com/LachyFS/kanban-markdown-vscode-extension), published as [Kanban Markdown](https://marketplace.visualstudio.com/items?itemName=LachyFS.kanban-markdown) on the VS Code Marketplace. The fork starts from upstream's code and file format, and plans to fix card ordering in the epic view, improve card editing and board polish, and later publish under its own name. "Markan" is a provisional name. The plan is in the [roadmap](docs/roadmap.md).
+**This fork is discontinued.** Markan was a personal project, forked from [LachyFS/kanban-markdown-vscode-extension](https://github.com/LachyFS/kanban-markdown-vscode-extension), published as [Kanban Markdown](https://marketplace.visualstudio.com/items?itemName=LachyFS.kanban-markdown) on the VS Code Marketplace. Work stopped after documenting the code and adding baseline tests, and the fork was never published. For a maintained extension, use upstream's Kanban Markdown.
+
+The fork was meant as the task board for an agent workflow. With several agents working in parallel, the board has to be one shared state, and cards spread across git branches and worktrees can't be that. Why in more detail, and what was planned, is in the [roadmap](docs/roadmap.md#discontinued).
 
 Features are stored as markdown files with YAML frontmatter — version-controllable, diffable, and editable outside the extension. No accounts, no external services.
 

@@ -4,11 +4,26 @@
 
 A personal fork of [Kanban Markdown](https://github.com/LachyFS/kanban-markdown-vscode-extension), the VS Code extension that shows Markdown files as a board. The fork fixes card ordering in the epic view, then improves card editing and board polish, and is eventually published under its own name, which is set early so the README can present the fork as its own. Upstream PRs are a nice-to-have (see [Upstream](git-workflow.md#upstream)). What each part of this doc holds is under [Roadmap](CLAUDE.md#roadmap).
 
+## Discontinued
+
+The fork was discontinued on 2026-10-24, after the baseline tests. Phase 1 was partly done: the area docs and the baseline tests exist, but the review findings weren't sorted into cards and the name wasn't confirmed. Nothing was published.
+
+Why: the fork was meant to be the task board for an agent workflow. Keeping the backlog as files in the repo turned out to be the wrong place for that once the workflow gets more agentic, with several agents working in parallel:
+
+- A board has to be a singleton: one shared state of every task that everyone, person or agent, reads and changes. Files in git aren't one. Each branch and worktree has its own copy of every card, so an agent in a worktree sees the board as it was when its branch was made, and a status change made there only reaches the others after a merge.
+- Every status change is a commit. With one agent at a time that's overhead; with several in parallel it means merge conflicts on the card files.
+- Agents working in parallel have to claim a task before starting it, so two don't pick the same one. That needs a shared state that changes at once; in git, every claim would have to go through `main` first.
+- Triggers (a label or status that starts a run) and agents running elsewhere need the board where they can reach it, outside the local checkout.
+
+A shared tracker (GitHub Issues) provides all of this, so tasks move there. Specs stay in the repo, where they are versioned with the code they describe. The work on the agent workflow continues in another project.
+
+The phases below and the cards in `backlog/` stay as they were left, as a record. They won't be worked on.
+
 ## Shipped
 
 Nothing yet.
 
-## Open phases
+## Phases not pursued
 
 ### Phase 1: Foundation
 
