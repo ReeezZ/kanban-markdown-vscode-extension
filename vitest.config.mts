@@ -32,12 +32,12 @@ export default defineConfig({
       include: [
         'src/shared/**',
         'src/extension/featureFileUtils.ts',
+        'src/extension/KanbanPanel.ts',
         'src/webview/components/**',
         'src/webview/store/**'
       ],
       exclude: [
         'src/extension/index.ts',
-        'src/extension/KanbanPanel.ts',
         'src/extension/SidebarViewProvider.ts',
         'src/extension/FeatureHeaderProvider.ts'
       ],
