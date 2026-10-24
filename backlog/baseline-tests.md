@@ -1,12 +1,12 @@
 ---
 id: "baseline-tests"
-status: "ready"
+status: "in-progress"
 priority: "high"
 assignee: null
 epic: "01 Foundation"
 dueDate: null
 created: "2026-10-23T16:30:00.000Z"
-modified: "2026-10-23T23:45:00.000Z"
+modified: "2026-10-24T13:25:00.000Z"
 completedAt: null
 labels: ["chore", "extension"]
 order: "a0l"
