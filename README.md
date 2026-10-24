@@ -169,6 +169,8 @@ See [docs/development.md](docs/development.md) for setup, checks and workflow, a
 
 ## Contributors
 
+Contributors to upstream, whose work this fork builds on:
+
 - [@luciopaiva](https://github.com/luciopaiva) — sidebar view and layout improvements
 - [@ungive](https://github.com/ungive) — file organization and status subfolders
 - [@hodanli](https://github.com/hodanli) — label management enhancements
