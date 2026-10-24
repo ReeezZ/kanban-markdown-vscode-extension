@@ -52,7 +52,6 @@ The host and the webview talk through `postMessage`; `src/shared/types.ts` is th
 
 ## Risks
 
-- `_moveFeature` has no unit tests, and the order logic reaches across the extension and the webview.
 - A move computes its key from the cards in the target column, without looking at the epic lane, so a drop in an epic lane can land in the wrong place.
 - Two cards with equal `order` keys make a move throw; the error is not shown to the user.
 - The serializer drops unknown frontmatter fields, so a card edited on the board can lose fields added by hand.
