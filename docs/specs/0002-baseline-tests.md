@@ -4,7 +4,7 @@
 
 ## Status
 
-Approved
+Done — 2026-10-24
 
 - Phase: 01 Foundation
 - Card: baseline-tests
