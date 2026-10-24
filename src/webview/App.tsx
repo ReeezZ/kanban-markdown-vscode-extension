@@ -1,5 +1,4 @@
 import { useEffect, useState, useRef, useCallback } from 'react'
-import { generateKeyBetween } from 'fractional-indexing'
 import { useStore } from './store'
 import { KanbanBoard } from './components/KanbanBoard'
 import { KanbanEpicBoard } from './components/KanbanEpicBoard'
@@ -9,6 +8,7 @@ import { Toolbar } from './components/Toolbar'
 import { UndoToast } from './components/UndoToast'
 import type { Feature, FeatureStatus, Priority, ExtensionMessage, FeatureFrontmatter, AIAgent, AIPermissionMode, BoardViewMode } from '../shared/types'
 import { getTitleFromContent } from '../shared/types'
+import { computeMoveOrder } from '../shared/order'
 import { vscode } from './vscodeApi'
 import { initLocale, t } from './lib/i18n'
 
@@ -317,15 +317,7 @@ function App(): React.JSX.Element {
     const { features } = useStore.getState()
     const feature = features.find(f => f.id === featureId)
     if (feature) {
-      // Get sorted target column features (excluding the moved feature)
-      const targetColumn = features
-        .filter(f => f.status === newStatus && f.id !== featureId)
-        .sort((a, b) => (a.order < b.order ? -1 : a.order > b.order ? 1 : 0))
-
-      const clampedOrder = Math.max(0, Math.min(newOrder, targetColumn.length))
-      const before = clampedOrder > 0 ? targetColumn[clampedOrder - 1].order : null
-      const after = clampedOrder < targetColumn.length ? targetColumn[clampedOrder].order : null
-      const newOrderKey = generateKeyBetween(before, after)
+      const newOrderKey = computeMoveOrder(features, featureId, newStatus, newOrder)
 
       const updated = features.map(f =>
         f.id === featureId
