@@ -9,7 +9,7 @@ The fork's own setup and workflow. The root [README](../README.md) is the fork's
 - `src/extension/`: the extension host, bundled with esbuild.
 - `src/webview/`: the React webview, bundled with Vite.
 - `src/shared/`: types and utilities used by both sides. How they fit together is in [Architecture](architecture.md#building-blocks).
-- `tests/`: unit tests (Vitest) and the integration tests that run in a VS Code host.
+- `tests/`: unit tests (Vitest) and the integration tests that run in a VS Code host. See [tests/README.md](../tests/README.md).
 - `l10n/` and `package.nls*.json`: the en/es/pt strings. `pnpm check-l10n` checks that the files match.
 - `scripts/`: upstream's tsx scripts (`release.ts`, `check-l10n.ts`) and the doc check. See [scripts/README.md](../scripts/README.md) for when a script is shell and when it's Python.
 - `docs/`: roadmap, architecture, specs and area docs; what each holds is in [docs/CLAUDE.md](CLAUDE.md).
@@ -63,8 +63,10 @@ Two git hooks run automatically (see [Git workflow](#git-workflow)). `commit-msg
 
 ### Tests
 
-- **Unit and component tests** (Vitest) cover shared logic, extension utilities and React components, and need no VS Code host. `pnpm test` runs them once, `pnpm test:watch` in watch mode.
-- **Integration tests** (`pnpm test:integration`) launch a real VS Code with `@vscode/test-electron` and exercise the real file system and VS Code APIs. The first run downloads a VS Code binary (about 160 MB) into `.vscode-test/`, which later runs reuse.
+How the tests are split, where a new one goes and the fake `vscode` module are in [tests/README.md](../tests/README.md).
+
+- **Unit and component tests** (Vitest): `pnpm test` runs them once, `pnpm test:watch` in watch mode, `pnpm test:coverage` with a coverage report.
+- **Integration tests** (`pnpm test:integration`) launch a real VS Code with `@vscode/test-electron`. The first run downloads a VS Code binary (about 160 MB) into `.vscode-test/`, which later runs reuse.
 - **CI locally:** [`act`](https://github.com/nektos/act) runs the GitHub Actions workflow in Docker (macOS: `brew install act`). `act push -j test --container-architecture linux/amd64` runs the CI test job.
 
 ## Git workflow
