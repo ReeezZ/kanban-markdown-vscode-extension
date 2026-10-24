@@ -15,7 +15,7 @@ order: "aB"
 
 **Goal:** the fork has its own name and publisher, so it doesn't collide with `LachyFS.kanban-markdown` and can be published.
 
-The provisional name is chosen in [`provisional-name`](done/provisional-name.md) and the README presents it ([`readme-rework`](readme-rework.md)); this card confirms it and registers it. Until the publisher is registered, the name is only text. The settings prefix stays `kanban-markdown.*` until [`settings-prefix`](settings-prefix.md).
+The provisional name is chosen in [`provisional-name`](done/provisional-name.md) and the README presents it ([`readme-rework`](done/readme-rework.md)); this card confirms it and registers it. Until the publisher is registered, the name is only text. The settings prefix stays `kanban-markdown.*` until [`settings-prefix`](settings-prefix.md).
 
 - The Marketplace ID is `publisher.name`. The publisher ID can't be changed after creation, and names of removed extensions stay reserved. Pick the publisher with care (a name or handle).
 - The provisional name is Markan; the checks behind it and the names dropped are in [`provisional-name`](done/provisional-name.md). The bar for a name: distinct and honest, with no live product, extension or domain with users in the same niche (tiny hobby repos are fine). "Kanban" may appear in the display name or tagline ("Markan – Markdown Kanban board"), "Kanban Markdown" may not. The search can't show reserved names; the real check is `vsce publish`.

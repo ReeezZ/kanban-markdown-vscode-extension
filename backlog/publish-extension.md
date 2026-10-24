@@ -22,7 +22,7 @@ Steps from the handoff:
 - No tag goes to origin before the name and publisher are set; see [Releases](../docs/git-workflow.md#releases).
 - vsce doesn't read `.gitignore`, so anything new and untracked in the repo root ends up in the `.vsix` unless `.vscodeignore` excludes it.
 - After publishing, swap the extension ID in `.devcontainer/devcontainer.json` and in guitar_companion.
-- After publishing, the fork's own Marketplace, Open VSX, downloads, stars and CI badges go back into the README (upstream's were removed in [`readme-rework`](readme-rework.md)).
+- After publishing, the fork's own Marketplace, Open VSX, downloads, stars and CI badges go back into the README (upstream's were removed in [`readme-rework`](done/readme-rework.md)).
 - `LICENSE` gets the fork's copyright line next to upstream's, which MIT requires to stay.
 
 **Done when**
