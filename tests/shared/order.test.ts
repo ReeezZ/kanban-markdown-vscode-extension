@@ -10,7 +10,7 @@ const BOARD = [
   c('t1', 'todo', 'a0'),
   c('t2', 'todo', 'a1'),
   c('t3', 'todo', 'a2'),
-  c('p1', 'in-progress', 'a0V'),
+  c('p1', 'in-progress', 'a0G'),
   c('p2', 'in-progress', 'a1V')
 ]
 
@@ -55,9 +55,10 @@ describe('computeMoveOrder', () => {
   })
 
   it('ignores cards in other columns', () => {
-    // p1 (a0V) sits between t1 and t2 by key, but is in another column
+    // p1 (a0G) sits between t1 and t2 by key, but is in another column: counting it
+    // would put the key between a0 and a0G instead of past a0G
     const key = computeMoveOrder(BOARD, 't3', 'todo', 1)
-    expectBetween(key, 'a0', 'a1')
+    expectBetween(key, 'a0G', 'a1')
   })
 
   it('sorts the column by key rather than by array order', () => {
