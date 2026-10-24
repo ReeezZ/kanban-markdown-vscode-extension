@@ -18,7 +18,7 @@ How the tests are split, where a new one goes, and why. The commands and the che
 - Logic that doesn't import `vscode` (most of `src/shared/`, pure helpers): a plain unit test. Moving logic out of `vscode`-bound code into such a function is the cheapest way to test it.
 - Host code that imports `vscode`: `tests/extension/`, on the fake. `KanbanPanel` is built with `KanbanPanel.revive()` and driven by the messages the webview would send.
 - What the fake can't answer, such as real fs semantics or when watcher events arrive: an integration test.
-- The webview: component tests in jsdom, through the store and DOM events.
+- The webview: component tests in jsdom, through the store and DOM events. jsdom has no `DragEvent` and no layout, so a drag test sets `clientY` on the event itself and stubs `getBoundingClientRect`; passed in the event's init, `clientY` is dropped silently.
 - Host↔webview messages: each side on its own, against the types in `src/shared/types.ts`. The host tests read what the fake panel's `postMessage` received; the webview tests read the mocked `vscodeApi`.
 
 ## The fake vscode module
