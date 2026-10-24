@@ -17,18 +17,18 @@ order: "a0s"
 
 One pass per area, after the area docs and the baseline tests exist. A finding is a card (correctness, structure, tests), not a fix made on the spot. The ones that should come before the Phase 2 fixes go into `01 Foundation`; the rest into a later epic.
 
+The three reading passes are done (host and webview while writing their area docs, `src/shared` on its own); what's left is sorting the findings below into cards, after [`baseline-tests`](baseline-tests.md).
+
 **Done when**
 
-- [ ] a review pass is done for the host, the webview and `src/shared`
+- [x] a review pass is done for the host, the webview and `src/shared`
 - [ ] every finding is a card or is dropped, with the reason
 - [ ] each card has an epic: Foundation if it must come before the fixes, otherwise later
 - [ ] the roadmap's Foundation items still match what the review found
 
 **Out of scope:** doing the refactors; each one is its own card.
 
-**Open questions**
-
-- Which lenses per pass (structure, correctness, tests, naming)?
+The lenses used per pass: correctness, structure and duplication, the contract, and test gaps.
 
 **Findings from the extension docs pass** (raw input for the host pass, unsorted into cards; from reading, not running):
 
@@ -63,5 +63,16 @@ One pass per area, after the area docs and the baseline tests exist. A finding i
 - Dead code: `QuickAddInput.tsx`, `PrioritySelect.tsx`, the store's `addFeature`, `updateFeature` and `removeFeature`, `FeatureCard`'s `isDragging` prop, the `dataTransfer` id.
 - Duplication: `Dropdown`, `PropertyRow` and the label input are copied between `FeatureEditor` and `CreateFeatureDialog`; the editor uses a native date input, the dialog `DatePicker`; the order comparator is in the store twice and in `App.tsx`; `KanbanEpicBoard` repeats `featureMatchesEpicLane` inline.
 - Strings: the `Esc`, `⌘S`, `⌘ Enter` and `⌘B` hints are hard-coded and show `⌘` on every platform. Ctrl/Cmd+B always starts Claude, not the agent picked in the dropdown; it also toggles bold in the body and VS Code's primary sidebar at the same time (seen in the running app).
+
+**Findings from the `src/shared` pass** (raw input, unsorted into cards; the parser and filename ones checked with a script, the rest from reading; nothing found in `epicColor.ts`; already covered by a card: the fixed `FeatureStatus` union in [`status-options-from-columns`](status-options-from-columns.md), the body trim and the dropped fields in [`serializer-keeps-card-files`](serializer-keeps-card-files.md); already in the lists above: quote escaping, labels with commas, missing dates read as now, the untyped contract, `editorTypes.ts`, `DEFAULT_COLUMNS`):
+
+- Parser, wrong field: a key with an empty value (`assignee:`, valid YAML for null) takes the next line as its value, since `\s*` in `getValue`'s regex also matches the newline: `assignee:` followed by `epic: "Foo"` reads as the assignee `epic: "Foo`. Only hand-edited files have this; the serializer always writes `null`.
+- Parser: values aren't checked against their type, so `priority: "urgent"` passes as a `Priority`. Quotes are stripped from each end on their own, so `"foo` reads as `foo`.
+- Parser: a card without `order` gets `a0`, so two hand-written cards in one column share a key and a drag between them throws (see [`equal-order-keys`](equal-order-keys.md)).
+- Filenames: `generateFeatureFilename` drops every non-ASCII letter, though es and pt are supported locales: "Añadir opción" becomes `aadir-opcin`, a Cyrillic or CJK title becomes `feature`. The cut to 50 characters runs after the hyphen trim, so a cut at a space leaves `--` before the date.
+- Structure: `types.ts` is the host↔webview contract but also holds logic (`getTitleFromContent`, `generateFeatureFilename`, `epicLaneId`). `epicLaneId` belongs with `featureMatchesEpicLane` in `epicLane.ts`; the epic normalisation (trim, empty means none) is written out in both and again in `epicColor.ts`.
+- Structure: a card's field list is written out six times: `Feature`, `FeatureFrontmatter` (could be `Omit<Feature, 'content' | 'filePath'>`), the `createFeature` payload, the parser, the serializer and `FeatureHeaderProvider`. A new field means touching all of them.
+- Contract: `moveFeature.newStatus` is `string` while every other status is `FeatureStatus`, so the host casts it unchecked (`KanbanPanel.ts:611`).
+- Test gaps: `epicLaneId` has no test; the parser tests don't cover an empty value, a quote inside a value or a label with a comma; nothing checks that parsing then serializing a file gives back the same file, which [`serializer-keeps-card-files`](serializer-keeps-card-files.md) will need.
 
 **Needs:** [`baseline-tests`](baseline-tests.md), [`area-docs-baseline`](done/area-docs-baseline.md)
