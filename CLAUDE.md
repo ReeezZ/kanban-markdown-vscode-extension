@@ -47,6 +47,7 @@
 - When the current model doesn't fit the task, say so at the start of the reply in one line: the model to switch to and why. Then stop before doing the work, and ask the user to `/model …` or to say to go on anyway. A quick answer or a question back doesn't need the stop. Otherwise say nothing about the model.
   - Opus fits open design questions, debugging whose cause isn't known yet, changes that reach across areas, and reviews.
   - Sonnet fits carrying out an approved plan or spec, mechanical edits, doc syncs and following the commit/merge workflow.
+- The check runs both ways. Opus on Sonnet work is the one that gets missed, since nothing goes wrong and it only costs more: say so in one line, and stop when the remaining work is more than a few steps. Look at it when a plan is approved (`opusplan` switches to Sonnet by itself, a plain `opus` session doesn't) and at the start of `/park`, `/merge` and `/orchestrate`.
 - Whatever hands work on names the model for it, in one line with the reason in a few words:
   - a plan's last line: Sonnet (what `opusplan` switches to) when the steps are spelled out, or Opus when they still need judgement (say which part), then written out as "run `/model opus` before approving", since approving switches `opusplan` to Sonnet;
   - a handoff prompt for a new session or another agent, at its top;
