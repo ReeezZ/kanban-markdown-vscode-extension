@@ -62,6 +62,6 @@ One pass per area, after the area docs and the baseline tests exist. A finding i
 - Contract: `vscode.postMessage` takes `unknown` (`vscodeApi.ts`), so the webview side isn't checked either; `updateFeature` is declared and handled by the host but never sent; the `init` handler guards fields the type calls required.
 - Dead code: `QuickAddInput.tsx`, `PrioritySelect.tsx`, the store's `addFeature`, `updateFeature` and `removeFeature`, `FeatureCard`'s `isDragging` prop, the `dataTransfer` id.
 - Duplication: `Dropdown`, `PropertyRow` and the label input are copied between `FeatureEditor` and `CreateFeatureDialog`; the editor uses a native date input, the dialog `DatePicker`; the order comparator is in the store twice and in `App.tsx`; `KanbanEpicBoard` repeats `featureMatchesEpicLane` inline.
-- Strings: the `Esc`, `⌘S`, `⌘ Enter` and `⌘B` hints are hard-coded and show `⌘` on every platform. Ctrl/Cmd+B always starts Claude, not the agent picked in the dropdown.
+- Strings: the `Esc`, `⌘S`, `⌘ Enter` and `⌘B` hints are hard-coded and show `⌘` on every platform. Ctrl/Cmd+B always starts Claude, not the agent picked in the dropdown; it also toggles bold in the body and VS Code's primary sidebar at the same time (seen in the running app).
 
 **Needs:** [`baseline-tests`](baseline-tests.md), [`area-docs-baseline`](done/area-docs-baseline.md)
