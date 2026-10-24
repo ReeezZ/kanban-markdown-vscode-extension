@@ -238,3 +238,82 @@ describe('KanbanPanel moveFeature — what is written and posted', () => {
     expect(harness.posted()).toHaveLength(0)
   })
 })
+
+// ---------------------------------------------------------------------------
+// File watcher
+// ---------------------------------------------------------------------------
+
+describe('KanbanPanel watcher', () => {
+  it('reloads from disk once, 100 ms after the last of several events', async () => {
+    const t1 = CARDS[0]
+    fake.fs.writeText(cardPath(t1), cardText({ ...t1, status: 'in-progress' }))
+
+    fake.watcher.fireChange(cardPath(t1))
+    await vi.advanceTimersByTimeAsync(50)
+    fake.watcher.fireChange(cardPath(t1))
+    await vi.advanceTimersByTimeAsync(50)
+    fake.watcher.fireCreate(cardPath(t1))
+    await vi.advanceTimersByTimeAsync(99)
+    expect(harness.posted('init')).toHaveLength(0)
+
+    await vi.advanceTimersByTimeAsync(1)
+    expect(harness.posted('init')).toHaveLength(1)
+    // t1 keeps its key a0, so it sorts first
+    expect(column(lastInit(), 'in-progress')).toEqual(['t1', 'p1', 'p2'])
+  })
+
+  it('drops events that arrive while a move renames the file, and not after', async () => {
+    fake.onRename = (_source, target) => fake.watcher.fireCreate(target.fsPath)
+    await move('t1', 'done', 0)
+    await vi.advanceTimersByTimeAsync(500)
+    // only the init from the move itself
+    expect(harness.posted('init')).toHaveLength(1)
+
+    fake.watcher.fireChange(path.join(DONE_DIR, 't1.md'))
+    await vi.advanceTimersByTimeAsync(100)
+    expect(harness.posted('init')).toHaveLength(2)
+  })
+
+  describe('with a card open in the editor', () => {
+    beforeEach(async () => {
+      await harness.send({ type: 'openFeature', featureId: 't1' })
+      harness.panel.webview.postMessage.mockClear()
+    })
+
+    it('re-sends the open card when its file differs from the last save', async () => {
+      await move('t1', 'todo', 2)
+      fake.watcher.fireChange(path.join(FEATURES_DIR, 't1.md'))
+      await vi.advanceTimersByTimeAsync(100)
+
+      const sent = harness.posted<{ featureId: string; frontmatter: { order: string } }>('featureContent')
+      expect(sent).toHaveLength(1)
+      expect(sent[0].featureId).toBe('t1')
+      expect(sent[0].frontmatter.order).toBe(readCard(path.join(FEATURES_DIR, 't1.md')).order)
+    })
+
+    it('does not re-send the open card when its file matches the last save', async () => {
+      await harness.send({
+        type: 'saveFeatureContent',
+        featureId: 't1',
+        content: '# t1 edited',
+        frontmatter: {
+          id: 't1', status: 'todo', priority: 'medium', assignee: null, epic: null, dueDate: null,
+          created: OLD, modified: OLD, completedAt: null, labels: [], order: 'a0'
+        }
+      })
+      harness.panel.webview.postMessage.mockClear()
+
+      fake.watcher.fireChange(path.join(FEATURES_DIR, 't1.md'))
+      await vi.advanceTimersByTimeAsync(100)
+      expect(harness.posted('init')).toHaveLength(1)
+      expect(harness.posted('featureContent')).toHaveLength(0)
+    })
+
+    it('does not re-send the open card for an event on another file', async () => {
+      await move('t1', 'todo', 2)
+      fake.watcher.fireChange(path.join(FEATURES_DIR, 't2.md'))
+      await vi.advanceTimersByTimeAsync(100)
+      expect(harness.posted('featureContent')).toHaveLength(0)
+    })
+  })
+})
