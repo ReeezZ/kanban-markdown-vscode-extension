@@ -39,7 +39,7 @@
 - If the user has multiple requests. Separate them into distinct tasks and address them one at a time. Commit each task (see above) and wait for the user before tackling the next one.
 - A follow-up that turns up mid-task and isn't needed to finish it: point it out and offer to park it with `/park`, which also checks for an existing card it could extend instead. Don't chase it, and don't write the card without the user's yes. If several turn up in one task, say so: the task may be cut wrong.
 - In plan mode, a skill's edits and commits (a card from `/park`, the cards from `/refine`, a new branch) become steps in the plan file, and approving the plan is the user's yes for them; don't ask again. A merge still waits for the user's yes in chat (see [Git](#git)).
-- After a task is committed, say whether it's a good point to `/clear`, and list what so far lives only in the conversation (decisions, findings, open questions), offering to write it down first (spec, card, memory). Say "nothing open" if that's the case. Name the model for the next task when it's known ([Model choice](#model-choice)). If the user prefers to compact, suggest a `/compact keep: …` line with those items filled in.
+- After a task is committed, say whether it's a good point to `/clear`, and list what so far lives only in the conversation (decisions, findings, open questions), offering to write it down first (spec, card, memory). Say "nothing open" if that's the case. When the next task is known, offer a handoff prompt for it, ready to paste, with the model line at its top ([Model choice](#model-choice)) and those open items inside it, so `/clear` costs nothing. If the user prefers to compact, suggest a `/compact keep: …` line with those items filled in.
 
 ### Model choice
 
